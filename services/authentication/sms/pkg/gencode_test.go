@@ -11,7 +11,7 @@ func TestGenCode(t *testing.T) {
 		if err != nil {
 			t.Errorf("%d: GenCode() error", i)
 		}
-		t.Logf("%d: %06d", i, got)
+		t.Logf("%d: %d", i, got)
 		if !(got < maxCode) {
 			t.Errorf("%d: GenCode() = %d; want in range [0, maxCode)", i, got)
 		}
