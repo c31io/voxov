@@ -4,7 +4,7 @@
 
 ### gate
 
-API gateway with rate limit and session control.
+API gateway with session control.
 
 - Redis
 
