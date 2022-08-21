@@ -3,3 +3,28 @@ syntax = "proto3";
 option go_package = "github.com/c31io/voxov/api";
 
 package voxov;
+
+service VOxOV {
+    // session
+    rpc CreateSession () returns ();
+    rpc UpdateSession () returns ();
+    rpc DeleteSession () returns ();
+    // authenticate
+    rpc Authenticate () returns ();
+    // device
+    rpc CreateDevice() returns();
+    rpc ReadDevice() return ();
+    rpc UpdateDevice() returns();
+    rpc DeleteDevice() returns();
+    rpc ListDevice() return();
+    // pay
+    rpc Pay () returns ();
+    rpc Refund () returns ();
+    // plan
+    rpc ListPlan () return ();
+    rpc AddPlan () return ();
+    // meme
+    // gene
+    // censor
+    // staff
+}

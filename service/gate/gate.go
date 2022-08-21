@@ -1,7 +1,13 @@
 package main
 
-import "github.com/c31io/voxov/pkg/gate"
+import (
+	"context"
+
+	"github.com/c31io/voxov/pkg/gate"
+)
 
 func main() {
+	_ = context.Background()
+	_ = gate.Rdb
 	_ = new(gate.Session)
 }

@@ -3,7 +3,6 @@ package gate
 import (
 	"crypto/rand"
 	"errors"
-	"time"
 )
 
 // It takes more than 1.7*10^8 years to randomly guess one
@@ -11,10 +10,8 @@ import (
 const tokenBytes = 16
 
 type Session struct {
-	token         []byte
-	expire        int64 // Unix second
-	authenticated bool
-	person        []byte
+	token  []byte
+	person []byte
 }
 
 var ErrSessionExpired = errors.New("session: expired")
@@ -30,26 +27,11 @@ func genToken() []byte {
 
 func NewSession(ttl int64) *Session {
 	token := genToken()
-	expire := time.Now().Unix() + ttl
 	return &Session{
-		token:  token,
-		expire: expire,
+		token: token,
 	}
 }
 
-func (s *Session) IsExpired() bool {
-	return s.expire < time.Now().Unix()
-}
-
-func (s *Session) Renew(ttl int64) error {
-	if s.IsExpired() {
-		return ErrSessionExpired
-	}
-	s.expire = time.Now().Unix() + ttl
-	return nil
-}
-
-func (s *Session) AuthenticateAs(person []byte) {
-	s.authenticated = true
+func (s *Session) AuthAs(person []byte) {
 	s.person = person
 }
