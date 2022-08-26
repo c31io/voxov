@@ -21,10 +21,20 @@ service VOxOV {
     rpc Pay () returns ();
     rpc Refund () returns ();
     // plan
-    rpc ListPlan () return ();
-    rpc AddPlan () return ();
+    rpc CreatePlan() returns();
+    rpc ReadPlan() return ();
+    rpc UpdatePlan() returns();
+    rpc DeletePlan() returns();
+    rpc ListPlan() return();
     // meme
+    rpc CreateMeme () return ();
+    rpc ReadMeme () return ();
+    rpc DeleteMeme () return ();
     // gene
+    rpc ExpressGene () return ();
+    rpc SilenceGene () return ();
     // censor
-    // staff
+    rpc RequestMark () return ();
+    rpc MarkMeme () return ();
+    // TODO: staff
 }
