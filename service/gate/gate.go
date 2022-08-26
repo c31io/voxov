@@ -23,7 +23,7 @@ func init() {
 }
 
 func main() {
-	lis, err := net.Listen("tcp", gatePort)
+	lis, err := net.Listen("tcp", ":"+gatePort)
 	if err != nil {
 		log.Fatalf("gate failed to listen: %v", err)
 	}
