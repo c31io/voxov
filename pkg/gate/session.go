@@ -3,6 +3,7 @@ package gate
 import (
 	"crypto/rand"
 	"errors"
+	"log"
 )
 
 // It takes more than 1.7*10^8 years to randomly guess one
@@ -20,7 +21,7 @@ func genToken() []byte {
 	b := make([]byte, tokenBytes)
 	_, err := rand.Read(b)
 	if err != nil {
-		panic("session: crypto/rand returned an error")
+		log.Fatal("session: crypto/rand returned an error")
 	}
 	return b
 }
