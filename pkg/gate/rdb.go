@@ -9,7 +9,7 @@ import (
 var (
 	rdbAddr   string
 	rdbPasswd string
-	Rdb       *redis.Client
+	rdb       *redis.Client
 )
 
 func init() {
@@ -25,7 +25,7 @@ func init() {
 	} else {
 		rdbPasswd = val
 	}
-	Rdb = redis.NewClient(&redis.Options{
+	rdb = redis.NewClient(&redis.Options{
 		Addr:     rdbAddr,
 		Password: rdbPasswd,
 	})

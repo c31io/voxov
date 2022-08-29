@@ -6,35 +6,75 @@ package voxov;
 
 service VOxOV {
     // session
-    rpc CreateSession () returns ();
-    rpc UpdateSession () returns ();
-    rpc DeleteSession () returns ();
+    rpc CreateSession (CreateSessionRequest) returns (CreateSessionReply);
+    rpc UpdateSession (UpdateSessionRequest) returns (UpdateSessionReply);
     // authenticate
-    rpc Authenticate () returns ();
+    rpc Authenticate (AuthenticateRequest) returns (AuthenticateReply);
+    rpc WhoAmI (WhoAmIRequest) returns (WhoAmIReply);
     // device
-    rpc CreateDevice() returns();
-    rpc ReadDevice() return ();
-    rpc UpdateDevice() returns();
-    rpc DeleteDevice() returns();
-    rpc ListDevice() return();
+
+    /* TODO
+    rpc CreateDevice() returns ();
+    rpc ReadDevice() returns ();
+    rpc UpdateDevice() returns ();
+    rpc DeleteDevice() returns ();
+    rpc ListDevice() returns ();
     // pay
     rpc Pay () returns ();
     rpc Refund () returns ();
     // plan
-    rpc CreatePlan() returns();
-    rpc ReadPlan() return ();
-    rpc UpdatePlan() returns();
-    rpc DeletePlan() returns();
-    rpc ListPlan() return();
+    rpc CreatePlan() returns ();
+    rpc ReadPlan() returns ();
+    rpc UpdatePlan() returns ();
+    rpc DeletePlan() returns ();
+    rpc ListPlan() returns ();
     // meme
-    rpc CreateMeme () return ();
-    rpc ReadMeme () return ();
-    rpc DeleteMeme () return ();
+    rpc CreateMeme () returns ();
+    rpc ReadMeme () returns ();
+    rpc DeleteMeme () returns ();
     // gene
-    rpc ExpressGene () return ();
-    rpc SilenceGene () return ();
+    rpc ExpressGene () returns ();
+    rpc SilenceGene () returns ();
     // censor
-    rpc RequestMark () return ();
-    rpc MarkMeme () return ();
+    rpc RequestMark () returns ();
+    rpc MarkMeme () returns ();
+    */
+
     // TODO: staff
+}
+
+message CreateSessionRequest {
+    int32 api_version = 1;
+    int64 ttl = 2;
+}
+
+message CreateSessionReply {
+    int32 api_version = 1;
+    bytes token = 2;
+}
+
+message UpdateSessionRequest {
+    bytes token = 1;
+    int64 ttl = 2;
+}
+
+message UpdateSessionReply {
+    bool ok = 1;
+}
+
+message AuthenticateRequest {
+    bytes token = 1;
+}
+
+message AuthenticateReply {
+    string tel = 1;
+    string msg = 2;
+}
+
+message WhoAmIRequest {
+    bytes token = 1;
+}
+
+message WhoAmIReply {
+    bytes person = 1;
 }

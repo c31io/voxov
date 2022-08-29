@@ -7,7 +7,10 @@
 package api
 
 import (
+	context "context"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -19,6 +22,12 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type VOxOVClient interface {
+	// session
+	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionReply, error)
+	UpdateSession(ctx context.Context, in *UpdateSessionRequest, opts ...grpc.CallOption) (*UpdateSessionReply, error)
+	// authenticate
+	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateReply, error)
+	WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.CallOption) (*WhoAmIReply, error)
 }
 
 type vOxOVClient struct {
@@ -29,10 +38,52 @@ func NewVOxOVClient(cc grpc.ClientConnInterface) VOxOVClient {
 	return &vOxOVClient{cc}
 }
 
+func (c *vOxOVClient) CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionReply, error) {
+	out := new(CreateSessionReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/CreateSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) UpdateSession(ctx context.Context, in *UpdateSessionRequest, opts ...grpc.CallOption) (*UpdateSessionReply, error) {
+	out := new(UpdateSessionReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/UpdateSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateReply, error) {
+	out := new(AuthenticateReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/Authenticate", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.CallOption) (*WhoAmIReply, error) {
+	out := new(WhoAmIReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/WhoAmI", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VOxOVServer is the server API for VOxOV service.
 // All implementations must embed UnimplementedVOxOVServer
 // for forward compatibility
 type VOxOVServer interface {
+	// session
+	CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionReply, error)
+	UpdateSession(context.Context, *UpdateSessionRequest) (*UpdateSessionReply, error)
+	// authenticate
+	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateReply, error)
+	WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIReply, error)
 	mustEmbedUnimplementedVOxOVServer()
 }
 
@@ -40,6 +91,18 @@ type VOxOVServer interface {
 type UnimplementedVOxOVServer struct {
 }
 
+func (UnimplementedVOxOVServer) CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateSession not implemented")
+}
+func (UnimplementedVOxOVServer) UpdateSession(context.Context, *UpdateSessionRequest) (*UpdateSessionReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSession not implemented")
+}
+func (UnimplementedVOxOVServer) Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Authenticate not implemented")
+}
+func (UnimplementedVOxOVServer) WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WhoAmI not implemented")
+}
 func (UnimplementedVOxOVServer) mustEmbedUnimplementedVOxOVServer() {}
 
 // UnsafeVOxOVServer may be embedded to opt out of forward compatibility for this service.
@@ -53,13 +116,102 @@ func RegisterVOxOVServer(s grpc.ServiceRegistrar, srv VOxOVServer) {
 	s.RegisterService(&VOxOV_ServiceDesc, srv)
 }
 
+func _VOxOV_CreateSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).CreateSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/CreateSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).CreateSession(ctx, req.(*CreateSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_UpdateSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).UpdateSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/UpdateSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).UpdateSession(ctx, req.(*UpdateSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_Authenticate_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthenticateRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).Authenticate(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/Authenticate",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).Authenticate(ctx, req.(*AuthenticateRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_WhoAmI_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WhoAmIRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).WhoAmI(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/WhoAmI",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).WhoAmI(ctx, req.(*WhoAmIRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VOxOV_ServiceDesc is the grpc.ServiceDesc for VOxOV service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var VOxOV_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "voxov.VOxOV",
 	HandlerType: (*VOxOVServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "voxov.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateSession",
+			Handler:    _VOxOV_CreateSession_Handler,
+		},
+		{
+			MethodName: "UpdateSession",
+			Handler:    _VOxOV_UpdateSession_Handler,
+		},
+		{
+			MethodName: "Authenticate",
+			Handler:    _VOxOV_Authenticate_Handler,
+		},
+		{
+			MethodName: "WhoAmI",
+			Handler:    _VOxOV_WhoAmI_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "voxov.proto",
 }
