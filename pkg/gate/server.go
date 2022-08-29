@@ -31,7 +31,7 @@ func init() {
 
 func (s *Server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest) (*pb.CreateSessionReply, error) {
 	if apiVersion != in.GetApiVersion() || in.GetTtl() <= 0 {
-		log.Printf("Client API version is %d", in.GetApiVersion())
+		log.Printf("Client API version: %d", in.GetApiVersion())
 		return &pb.CreateSessionReply{ApiVersion: apiVersion}, nil
 	}
 	token := genToken()
