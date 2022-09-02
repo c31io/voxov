@@ -56,4 +56,10 @@ Privileged management.
 
 ### Monolithic
 
+[Deploy locally](../deploy/local.md)
+
 ### Istio
+
+## Client
+
+### tcell
