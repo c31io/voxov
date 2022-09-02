@@ -12,9 +12,9 @@ service VOxOV {
     rpc Authenticate (AuthenticateRequest) returns (AuthenticateReply);
     rpc WhoAmI (WhoAmIRequest) returns (WhoAmIReply);
     // device
+    rpc CreateDevice(CreateDeviceRequest) returns (CreateDeviceReply);
 
     /* TODO
-    rpc CreateDevice() returns ();
     rpc ReadDevice() returns ();
     rpc UpdateDevice() returns ();
     rpc DeleteDevice() returns ();
@@ -64,11 +64,13 @@ message UpdateSessionReply {
 
 message AuthenticateRequest {
     bytes token = 1;
+    int64 ttl = 2;
 }
 
 message AuthenticateReply {
-    string tel = 1;
-    string msg = 2;
+    int64 ttl = 1;
+    string tel = 2;
+    string msg = 3;
 }
 
 message WhoAmIRequest {
@@ -77,4 +79,14 @@ message WhoAmIRequest {
 
 message WhoAmIReply {
     bytes person = 1;
+}
+
+message CreateDeviceRequest {
+    bytes token = 1;
+    string name = 2;
+    string about = 3;
+}
+
+message CreateDeviceReply {
+    bool ok = 1;
 }
