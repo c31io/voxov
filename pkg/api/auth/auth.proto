@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option go_package = "github.com/c31io/voxov/api";
+
+package voxov;
+
+service Auth {
+    
+}

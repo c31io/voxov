@@ -5,30 +5,30 @@ import (
 	"net"
 	"os"
 
-	"github.com/c31io/voxov/pkg/gate"
+	"github.com/c31io/voxov/pkg/auth"
 	"google.golang.org/grpc"
 
-	pb "github.com/c31io/voxov/api"
+	pb "github.com/c31io/voxov/pkg/api/auth"
 )
 
-var gatePort string
+var authPort string
 
 func init() {
-	val, ok := os.LookupEnv("GATE_PORT")
+	val, ok := os.LookupEnv("AUTH_PORT")
 	if !ok {
-		gatePort = "10001"
+		authPort = "10002"
 	} else {
-		gatePort = val
+		authPort = val
 	}
 }
 
 func main() {
-	lis, err := net.Listen("tcp", ":"+gatePort)
+	lis, err := net.Listen("tcp", ":"+authPort)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterVOxOVServer(s, &gate.Server{})
+	pb.RegisterAuthServer(s, &auth.Server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)

@@ -28,6 +28,8 @@ type VOxOVClient interface {
 	// authenticate
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateReply, error)
 	WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.CallOption) (*WhoAmIReply, error)
+	// device
+	CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceReply, error)
 }
 
 type vOxOVClient struct {
@@ -74,6 +76,15 @@ func (c *vOxOVClient) WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grp
 	return out, nil
 }
 
+func (c *vOxOVClient) CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceReply, error) {
+	out := new(CreateDeviceReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/CreateDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // VOxOVServer is the server API for VOxOV service.
 // All implementations must embed UnimplementedVOxOVServer
 // for forward compatibility
@@ -84,6 +95,8 @@ type VOxOVServer interface {
 	// authenticate
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateReply, error)
 	WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIReply, error)
+	// device
+	CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceReply, error)
 	mustEmbedUnimplementedVOxOVServer()
 }
 
@@ -102,6 +115,9 @@ func (UnimplementedVOxOVServer) Authenticate(context.Context, *AuthenticateReque
 }
 func (UnimplementedVOxOVServer) WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhoAmI not implemented")
+}
+func (UnimplementedVOxOVServer) CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateDevice not implemented")
 }
 func (UnimplementedVOxOVServer) mustEmbedUnimplementedVOxOVServer() {}
 
@@ -188,6 +204,24 @@ func _VOxOV_WhoAmI_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _VOxOV_CreateDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).CreateDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/CreateDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).CreateDevice(ctx, req.(*CreateDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // VOxOV_ServiceDesc is the grpc.ServiceDesc for VOxOV service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,6 +244,10 @@ var VOxOV_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "WhoAmI",
 			Handler:    _VOxOV_WhoAmI_Handler,
+		},
+		{
+			MethodName: "CreateDevice",
+			Handler:    _VOxOV_CreateDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

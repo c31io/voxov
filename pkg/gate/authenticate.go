@@ -24,10 +24,21 @@ func init() {
 	}
 }
 
+// Client requests what to send to who to authenticate.
 func (s *Server) Authenticate(ctx context.Context, in *pb.AuthenticateRequest) (*pb.AuthenticateReply, error) {
+	if !isValidToken(ctx, &in.Token) || in.Ttl <= 0 {
+		return &pb.AuthenticateReply{}, nil
+	}
+	// Cap Ttl to range.
+	Ttl := in.Ttl
+	if Ttl > authMaxTtl {
+		Ttl = authMaxTtl
+	}
+	// TODO: pkg auth
 	return &pb.AuthenticateReply{}, nil
 }
 
+// Client checks if sms was received, and if so update session person.
 func (s *Server) WhoAmI(ctx context.Context, in *pb.WhoAmIRequest) (*pb.WhoAmIReply, error) {
 	return &pb.WhoAmIReply{}, nil
 }

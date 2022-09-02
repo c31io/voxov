@@ -22,6 +22,7 @@ func genToken() []byte {
 	return b
 }
 
+// Initiate a session with a positive ttl.
 func (s *Server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest) (*pb.CreateSessionReply, error) {
 	if apiVersion != in.GetApiVersion() || in.GetTtl() <= 0 {
 		log.Printf("Client API version: %d", in.GetApiVersion())
@@ -36,6 +37,7 @@ func (s *Server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest)
 	return &pb.CreateSessionReply{ApiVersion: apiVersion, Token: token}, nil
 }
 
+// Assign ttl if session is not expired.
 func (s *Server) UpdateSession(ctx context.Context, in *pb.UpdateSessionRequest) (*pb.UpdateSessionReply, error) {
 	if in.GetTtl() <= 0 {
 		return &pb.UpdateSessionReply{Ok: false}, nil
@@ -45,4 +47,13 @@ func (s *Server) UpdateSession(ctx context.Context, in *pb.UpdateSessionRequest)
 		return &pb.UpdateSessionReply{Ok: false}, nil
 	}
 	return &pb.UpdateSessionReply{Ok: true}, nil
+}
+
+func isValidToken(ctx context.Context, token *[]byte) bool {
+	val, err := rdb.Exists(ctx, string(*token)).Result()
+	if err != nil || val == 0 {
+		return false
+	} else {
+		return true
+	}
 }
