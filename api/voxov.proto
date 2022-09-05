@@ -68,9 +68,8 @@ message AuthenticateRequest {
 }
 
 message AuthenticateReply {
-    int64 ttl = 1;
-    string tel = 2;
-    string msg = 3;
+    string tel = 1;
+    string msg = 2;
 }
 
 message WhoAmIRequest {

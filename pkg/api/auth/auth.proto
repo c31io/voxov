@@ -5,5 +5,43 @@ option go_package = "github.com/c31io/voxov/api";
 package voxov;
 
 service Auth {
-    
+    rpc WaitMsg (WaitMsgRequest) returns (WaitMsgReply);
+    rpc CheckMsg (CheckMsgRequest) returns (CheckMsgReply);
+    // Create a new person if phone not found.
+    rpc PhoneToPerson (PhoneToPersonRequest) returns (PhoneToPersonReply);
+
+    /* TODO
+    rpc ChangePhone
+    rpc PersonIsHuman
+    rpc ReadPerson
+    rpc DeletePerson
+    */
+}
+
+message WaitMsgRequest {
+    bytes token = 1;
+    int64 ttl = 2;
+}
+
+message WaitMsgReply {
+    string tel = 1;
+    string msg = 2;
+}
+
+message CheckMsgRequest {
+    bytes token = 1;
+    string tel = 2;
+    string msg = 3;
+}
+
+message CheckMsgReply {
+    string phone = 1;
+}
+
+message PhoneToPersonRequest {
+    string phone = 1;
+}
+
+message PhoneToPersonReply {
+    bytes person = 1;
 }
