@@ -29,11 +29,8 @@ func (s *Server) Authenticate(ctx context.Context, in *pb.AuthenticateRequest) (
 	if !isValidToken(ctx, &in.Token) || in.Ttl <= 0 {
 		return &pb.AuthenticateReply{}, nil
 	}
-	// Cap Ttl to range.
-	Ttl := in.Ttl
-	if Ttl > authMaxTtl {
-		Ttl = authMaxTtl
-	}
+	ttl := minInt64(authMaxTtl, in.GetTtl())
+	_ = ttl
 	// TODO: pkg auth
 	return &pb.AuthenticateReply{}, nil
 }
