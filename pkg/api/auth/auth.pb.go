@@ -10,6 +10,7 @@ import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -19,20 +20,391 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type WaitMsgRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Token []byte `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Ttl   int64  `protobuf:"varint,2,opt,name=ttl,proto3" json:"ttl,omitempty"`
+}
+
+func (x *WaitMsgRequest) Reset() {
+	*x = WaitMsgRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *WaitMsgRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WaitMsgRequest) ProtoMessage() {}
+
+func (x *WaitMsgRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WaitMsgRequest.ProtoReflect.Descriptor instead.
+func (*WaitMsgRequest) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *WaitMsgRequest) GetToken() []byte {
+	if x != nil {
+		return x.Token
+	}
+	return nil
+}
+
+func (x *WaitMsgRequest) GetTtl() int64 {
+	if x != nil {
+		return x.Ttl
+	}
+	return 0
+}
+
+type WaitMsgReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Tel string `protobuf:"bytes,1,opt,name=tel,proto3" json:"tel,omitempty"`
+	Msg string `protobuf:"bytes,2,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *WaitMsgReply) Reset() {
+	*x = WaitMsgReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *WaitMsgReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*WaitMsgReply) ProtoMessage() {}
+
+func (x *WaitMsgReply) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use WaitMsgReply.ProtoReflect.Descriptor instead.
+func (*WaitMsgReply) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *WaitMsgReply) GetTel() string {
+	if x != nil {
+		return x.Tel
+	}
+	return ""
+}
+
+func (x *WaitMsgReply) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+type CheckMsgRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Token []byte `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Tel   string `protobuf:"bytes,2,opt,name=tel,proto3" json:"tel,omitempty"`
+	Msg   string `protobuf:"bytes,3,opt,name=msg,proto3" json:"msg,omitempty"`
+}
+
+func (x *CheckMsgRequest) Reset() {
+	*x = CheckMsgRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CheckMsgRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckMsgRequest) ProtoMessage() {}
+
+func (x *CheckMsgRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckMsgRequest.ProtoReflect.Descriptor instead.
+func (*CheckMsgRequest) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CheckMsgRequest) GetToken() []byte {
+	if x != nil {
+		return x.Token
+	}
+	return nil
+}
+
+func (x *CheckMsgRequest) GetTel() string {
+	if x != nil {
+		return x.Tel
+	}
+	return ""
+}
+
+func (x *CheckMsgRequest) GetMsg() string {
+	if x != nil {
+		return x.Msg
+	}
+	return ""
+}
+
+type CheckMsgReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Phone string `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+}
+
+func (x *CheckMsgReply) Reset() {
+	*x = CheckMsgReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *CheckMsgReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CheckMsgReply) ProtoMessage() {}
+
+func (x *CheckMsgReply) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CheckMsgReply.ProtoReflect.Descriptor instead.
+func (*CheckMsgReply) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *CheckMsgReply) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+type PhoneToPersonRequest struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Phone string `protobuf:"bytes,1,opt,name=phone,proto3" json:"phone,omitempty"`
+}
+
+func (x *PhoneToPersonRequest) Reset() {
+	*x = PhoneToPersonRequest{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_proto_msgTypes[4]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PhoneToPersonRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PhoneToPersonRequest) ProtoMessage() {}
+
+func (x *PhoneToPersonRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[4]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PhoneToPersonRequest.ProtoReflect.Descriptor instead.
+func (*PhoneToPersonRequest) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *PhoneToPersonRequest) GetPhone() string {
+	if x != nil {
+		return x.Phone
+	}
+	return ""
+}
+
+type PhoneToPersonReply struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Person int64 `protobuf:"varint,1,opt,name=person,proto3" json:"person,omitempty"`
+}
+
+func (x *PhoneToPersonReply) Reset() {
+	*x = PhoneToPersonReply{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_auth_proto_msgTypes[5]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *PhoneToPersonReply) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PhoneToPersonReply) ProtoMessage() {}
+
+func (x *PhoneToPersonReply) ProtoReflect() protoreflect.Message {
+	mi := &file_auth_proto_msgTypes[5]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PhoneToPersonReply.ProtoReflect.Descriptor instead.
+func (*PhoneToPersonReply) Descriptor() ([]byte, []int) {
+	return file_auth_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *PhoneToPersonReply) GetPerson() int64 {
+	if x != nil {
+		return x.Person
+	}
+	return 0
+}
+
 var File_auth_proto protoreflect.FileDescriptor
 
 var file_auth_proto_rawDesc = []byte{
 	0x0a, 0x0a, 0x61, 0x75, 0x74, 0x68, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x05, 0x76, 0x6f,
-	0x78, 0x6f, 0x76, 0x32, 0x06, 0x0a, 0x04, 0x41, 0x75, 0x74, 0x68, 0x42, 0x1c, 0x5a, 0x1a, 0x67,
-	0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x33, 0x31, 0x69, 0x6f, 0x2f,
-	0x76, 0x6f, 0x78, 0x6f, 0x76, 0x2f, 0x61, 0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x33,
+	0x78, 0x6f, 0x76, 0x22, 0x38, 0x0a, 0x0e, 0x57, 0x61, 0x69, 0x74, 0x4d, 0x73, 0x67, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x0c, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x74,
+	0x74, 0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x03, 0x74, 0x74, 0x6c, 0x22, 0x32, 0x0a,
+	0x0c, 0x57, 0x61, 0x69, 0x74, 0x4d, 0x73, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x10, 0x0a,
+	0x03, 0x74, 0x65, 0x6c, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x74, 0x65, 0x6c, 0x12,
+	0x10, 0x0a, 0x03, 0x6d, 0x73, 0x67, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73,
+	0x67, 0x22, 0x4b, 0x0a, 0x0f, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4d, 0x73, 0x67, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x01, 0x20,
+	0x01, 0x28, 0x0c, 0x52, 0x05, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x12, 0x10, 0x0a, 0x03, 0x74, 0x65,
+	0x6c, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x74, 0x65, 0x6c, 0x12, 0x10, 0x0a, 0x03,
+	0x6d, 0x73, 0x67, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6d, 0x73, 0x67, 0x22, 0x25,
+	0x0a, 0x0d, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4d, 0x73, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12,
+	0x14, 0x0a, 0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+	0x70, 0x68, 0x6f, 0x6e, 0x65, 0x22, 0x2c, 0x0a, 0x14, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x54, 0x6f,
+	0x50, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x14, 0x0a,
+	0x05, 0x70, 0x68, 0x6f, 0x6e, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x70, 0x68,
+	0x6f, 0x6e, 0x65, 0x22, 0x2c, 0x0a, 0x12, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x54, 0x6f, 0x50, 0x65,
+	0x72, 0x73, 0x6f, 0x6e, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x70, 0x65, 0x72,
+	0x73, 0x6f, 0x6e, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x70, 0x65, 0x72, 0x73, 0x6f,
+	0x6e, 0x32, 0xc0, 0x01, 0x0a, 0x04, 0x41, 0x75, 0x74, 0x68, 0x12, 0x35, 0x0a, 0x07, 0x57, 0x61,
+	0x69, 0x74, 0x4d, 0x73, 0x67, 0x12, 0x15, 0x2e, 0x76, 0x6f, 0x78, 0x6f, 0x76, 0x2e, 0x57, 0x61,
+	0x69, 0x74, 0x4d, 0x73, 0x67, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x13, 0x2e, 0x76,
+	0x6f, 0x78, 0x6f, 0x76, 0x2e, 0x57, 0x61, 0x69, 0x74, 0x4d, 0x73, 0x67, 0x52, 0x65, 0x70, 0x6c,
+	0x79, 0x12, 0x38, 0x0a, 0x08, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4d, 0x73, 0x67, 0x12, 0x16, 0x2e,
+	0x76, 0x6f, 0x78, 0x6f, 0x76, 0x2e, 0x43, 0x68, 0x65, 0x63, 0x6b, 0x4d, 0x73, 0x67, 0x52, 0x65,
+	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x14, 0x2e, 0x76, 0x6f, 0x78, 0x6f, 0x76, 0x2e, 0x43, 0x68,
+	0x65, 0x63, 0x6b, 0x4d, 0x73, 0x67, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x47, 0x0a, 0x0d, 0x50,
+	0x68, 0x6f, 0x6e, 0x65, 0x54, 0x6f, 0x50, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x12, 0x1b, 0x2e, 0x76,
+	0x6f, 0x78, 0x6f, 0x76, 0x2e, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x54, 0x6f, 0x50, 0x65, 0x72, 0x73,
+	0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x76, 0x6f, 0x78, 0x6f,
+	0x76, 0x2e, 0x50, 0x68, 0x6f, 0x6e, 0x65, 0x54, 0x6f, 0x50, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x52,
+	0x65, 0x70, 0x6c, 0x79, 0x42, 0x1c, 0x5a, 0x1a, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63,
+	0x6f, 0x6d, 0x2f, 0x63, 0x33, 0x31, 0x69, 0x6f, 0x2f, 0x76, 0x6f, 0x78, 0x6f, 0x76, 0x2f, 0x61,
+	0x70, 0x69, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
-var file_auth_proto_goTypes = []interface{}{}
+var (
+	file_auth_proto_rawDescOnce sync.Once
+	file_auth_proto_rawDescData = file_auth_proto_rawDesc
+)
+
+func file_auth_proto_rawDescGZIP() []byte {
+	file_auth_proto_rawDescOnce.Do(func() {
+		file_auth_proto_rawDescData = protoimpl.X.CompressGZIP(file_auth_proto_rawDescData)
+	})
+	return file_auth_proto_rawDescData
+}
+
+var file_auth_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_auth_proto_goTypes = []interface{}{
+	(*WaitMsgRequest)(nil),       // 0: voxov.WaitMsgRequest
+	(*WaitMsgReply)(nil),         // 1: voxov.WaitMsgReply
+	(*CheckMsgRequest)(nil),      // 2: voxov.CheckMsgRequest
+	(*CheckMsgReply)(nil),        // 3: voxov.CheckMsgReply
+	(*PhoneToPersonRequest)(nil), // 4: voxov.PhoneToPersonRequest
+	(*PhoneToPersonReply)(nil),   // 5: voxov.PhoneToPersonReply
+}
 var file_auth_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
+	0, // 0: voxov.Auth.WaitMsg:input_type -> voxov.WaitMsgRequest
+	2, // 1: voxov.Auth.CheckMsg:input_type -> voxov.CheckMsgRequest
+	4, // 2: voxov.Auth.PhoneToPerson:input_type -> voxov.PhoneToPersonRequest
+	1, // 3: voxov.Auth.WaitMsg:output_type -> voxov.WaitMsgReply
+	3, // 4: voxov.Auth.CheckMsg:output_type -> voxov.CheckMsgReply
+	5, // 5: voxov.Auth.PhoneToPerson:output_type -> voxov.PhoneToPersonReply
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -43,18 +415,93 @@ func file_auth_proto_init() {
 	if File_auth_proto != nil {
 		return
 	}
+	if !protoimpl.UnsafeEnabled {
+		file_auth_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*WaitMsgRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*WaitMsgReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CheckMsgRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*CheckMsgReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PhoneToPersonRequest); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_auth_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*PhoneToPersonReply); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_auth_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   0,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_auth_proto_goTypes,
 		DependencyIndexes: file_auth_proto_depIdxs,
+		MessageInfos:      file_auth_proto_msgTypes,
 	}.Build()
 	File_auth_proto = out.File
 	file_auth_proto_rawDesc = nil

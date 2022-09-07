@@ -42,7 +42,7 @@ func main() {
 			if !r.GetOk() || err != nil {
 				log.Fatal("Failed to update session")
 			}
-			log.Print("Session updated")
+			log.Println("Session updated")
 		}
 	}()
 	for {

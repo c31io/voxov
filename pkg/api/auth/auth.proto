@@ -43,5 +43,5 @@ message PhoneToPersonRequest {
 }
 
 message PhoneToPersonReply {
-    bytes person = 1;
+    int64 person = 1;
 }

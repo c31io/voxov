@@ -6,13 +6,17 @@ import (
 	"strconv"
 
 	pb "github.com/c31io/voxov/api"
+	"github.com/c31io/voxov/pkg/health"
 )
 
 type Server struct {
 	pb.UnimplementedVOxOVServer
 }
 
-var apiVersion int32
+var (
+	apiVersion int32
+	Health     *health.Health
+)
 
 func init() {
 	val, ok := os.LookupEnv("API_VERSION")
@@ -25,4 +29,5 @@ func init() {
 		}
 		apiVersion = int32(i)
 	}
+	Health = &health.Health{Alive: false, Dead: make(chan struct{})}
 }

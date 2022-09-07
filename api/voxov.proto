@@ -77,14 +77,14 @@ message WhoAmIRequest {
 }
 
 message WhoAmIReply {
-    bytes person = 1;
+    int64 person = 1;
 }
 
 message CreateDeviceRequest {
     bytes token = 1;
     bytes dtoken = 2;
     string name = 3;
-    string about = 4;
+    string info = 4;
 }
 
 message CreateDeviceReply {

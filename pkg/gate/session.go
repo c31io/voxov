@@ -49,7 +49,8 @@ func (s *Server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest)
 	ttl := minInt64(sessionMaxTtl, in.GetTtl())
 	err := rdb.Set(ctx, "s"+string(token), "", time.Duration(ttl)*time.Second).Err()
 	if err != nil {
-		log.Print("Failed to set on rdb")
+		log.Println("Failed to set on rdb")
+		Health.NowDead()
 		return &pb.CreateSessionReply{ApiVersion: apiVersion}, nil
 	}
 	return &pb.CreateSessionReply{ApiVersion: apiVersion, Token: token}, nil
@@ -61,16 +62,25 @@ func (s *Server) UpdateSession(ctx context.Context, in *pb.UpdateSessionRequest)
 		return &pb.UpdateSessionReply{Ok: false}, nil
 	}
 	ttl := minInt64(sessionMaxTtl, in.GetTtl())
-	err := rdb.ExpireXX(ctx, "s"+string(in.GetToken()), time.Duration(ttl)*time.Second).Err()
+	val, err := rdb.ExpireXX(ctx, "s"+string(in.GetToken()), time.Duration(ttl)*time.Second).Result()
 	if err != nil {
+		Health.NowDead()
 		return &pb.UpdateSessionReply{Ok: false}, nil
 	}
-	return &pb.UpdateSessionReply{Ok: true}, nil
+	if val {
+		return &pb.UpdateSessionReply{Ok: true}, nil
+	} else {
+		return &pb.UpdateSessionReply{Ok: false}, nil
+	}
 }
 
 func isValidToken(ctx context.Context, token *[]byte) bool {
 	val, err := rdb.Exists(ctx, "s"+string(*token)).Result()
-	if err != nil || val == 0 {
+	if err != nil {
+		Health.NowDead()
+		return false
+	}
+	if val == 0 {
 		return false
 	} else {
 		return true
