@@ -5,15 +5,22 @@ package auth
 
 import (
 	"context"
+	"fmt"
 	"log"
+	"math/rand"
 	"os"
+	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	pb "github.com/c31io/voxov/pkg/api/auth"
 )
 
-var waitMsgTtl time.Duration
+var (
+	waitMsgTtl time.Duration
+	tels       []string
+)
 
 func init() {
 	val, ok := os.LookupEnv("WAIT_MSG_TTL")
@@ -26,8 +33,31 @@ func init() {
 		}
 		waitMsgTtl = time.Duration(i) * time.Second
 	}
+	val, ok = os.LookupEnv("TELS")
+	if !ok {
+		log.Fatal("TEL must not be empty")
+	} else {
+		tels = strings.Split(val, ":")
+		re := regexp.MustCompile(`^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`)
+		for _, tel := range tels {
+			if !re.MatchString(tel) {
+				log.Fatal("Wrong TELS format")
+			}
+		}
+	}
 }
 
 func (s *Server) WaitMsg(ctx context.Context, in *pb.WaitMsgRequest) (*pb.WaitMsgReply, error) {
-	return &pb.WaitMsgReply{}, nil
+	tel := tels[rand.Intn(len(tels))]
+	code, err := GenCode()
+	msg := fmt.Sprint(code)
+	if err != nil {
+		log.Fatal("crypto/rand returned an error")
+	}
+	rdb.Set(ctx, "m"+string(in.GetToken())+tel+msg, "", waitMsgTtl)
+	return &pb.WaitMsgReply{Tel: tel, Msg: msg}, nil
+}
+
+func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.CheckMsgReply, error) {
+	return &pb.CheckMsgReply{}, nil
 }
