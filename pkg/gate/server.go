@@ -29,5 +29,8 @@ func init() {
 		}
 		apiVersion = int32(i)
 	}
-	Health = &health.Health{Alive: false, Dead: make(chan struct{})}
+	Health = &health.Health{
+		Alive: true,
+		Dead:  make(chan struct{}),
+	}
 }

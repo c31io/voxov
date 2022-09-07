@@ -14,10 +14,6 @@ type Health struct {
 	Dead  chan struct{}
 }
 
-func (h *Health) NowReady() {
-	h.Alive = true
-}
-
 func (h *Health) NowDead() {
 	h.Alive = false
 	h.Dead <- struct{}{}
@@ -43,10 +39,10 @@ func (h *Health) Watch(in *grpc_health_v1.HealthCheckRequest, stream grpc_health
 	status, _ := h.Check(context.Background(), in)
 	stream.Send(status)
 	for range h.Dead {
-		log.Printf("Health status: %s", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
-		stream.Send(&grpc_health_v1.HealthCheckResponse{
-			Status: grpc_health_v1.HealthCheckResponse_NOT_SERVING,
-		})
 	}
+	log.Printf("Health status: %s", grpc_health_v1.HealthCheckResponse_NOT_SERVING)
+	stream.Send(&grpc_health_v1.HealthCheckResponse{
+		Status: grpc_health_v1.HealthCheckResponse_NOT_SERVING,
+	})
 	return nil
 }
