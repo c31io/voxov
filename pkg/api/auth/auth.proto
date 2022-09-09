@@ -7,8 +7,6 @@ package voxov;
 service Auth {
     rpc WaitMsg (WaitMsgRequest) returns (WaitMsgReply);
     rpc CheckMsg (CheckMsgRequest) returns (CheckMsgReply);
-    // Create a new person if phone not found.
-    rpc PhoneToPerson (PhoneToPersonRequest) returns (PhoneToPersonReply);
 
     /* TODO
     rpc ChangePhone
@@ -34,13 +32,5 @@ message CheckMsgRequest {
 }
 
 message CheckMsgReply {
-    string phone = 1;
-}
-
-message PhoneToPersonRequest {
-    string phone = 1;
-}
-
-message PhoneToPersonReply {
-    int64 person = 1;
+    bytes person = 1;
 }

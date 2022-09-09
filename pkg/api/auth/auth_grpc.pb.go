@@ -24,8 +24,6 @@ const _ = grpc.SupportPackageIsVersion7
 type AuthClient interface {
 	WaitMsg(ctx context.Context, in *WaitMsgRequest, opts ...grpc.CallOption) (*WaitMsgReply, error)
 	CheckMsg(ctx context.Context, in *CheckMsgRequest, opts ...grpc.CallOption) (*CheckMsgReply, error)
-	// Create a new person if phone not found.
-	PhoneToPerson(ctx context.Context, in *PhoneToPersonRequest, opts ...grpc.CallOption) (*PhoneToPersonReply, error)
 }
 
 type authClient struct {
@@ -54,23 +52,12 @@ func (c *authClient) CheckMsg(ctx context.Context, in *CheckMsgRequest, opts ...
 	return out, nil
 }
 
-func (c *authClient) PhoneToPerson(ctx context.Context, in *PhoneToPersonRequest, opts ...grpc.CallOption) (*PhoneToPersonReply, error) {
-	out := new(PhoneToPersonReply)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/PhoneToPerson", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
 type AuthServer interface {
 	WaitMsg(context.Context, *WaitMsgRequest) (*WaitMsgReply, error)
 	CheckMsg(context.Context, *CheckMsgRequest) (*CheckMsgReply, error)
-	// Create a new person if phone not found.
-	PhoneToPerson(context.Context, *PhoneToPersonRequest) (*PhoneToPersonReply, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -83,9 +70,6 @@ func (UnimplementedAuthServer) WaitMsg(context.Context, *WaitMsgRequest) (*WaitM
 }
 func (UnimplementedAuthServer) CheckMsg(context.Context, *CheckMsgRequest) (*CheckMsgReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckMsg not implemented")
-}
-func (UnimplementedAuthServer) PhoneToPerson(context.Context, *PhoneToPersonRequest) (*PhoneToPersonReply, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method PhoneToPerson not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -136,24 +120,6 @@ func _Auth_CheckMsg_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_PhoneToPerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PhoneToPersonRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServer).PhoneToPerson(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/voxov.Auth/PhoneToPerson",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).PhoneToPerson(ctx, req.(*PhoneToPersonRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -168,10 +134,6 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckMsg",
 			Handler:    _Auth_CheckMsg_Handler,
-		},
-		{
-			MethodName: "PhoneToPerson",
-			Handler:    _Auth_PhoneToPerson_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

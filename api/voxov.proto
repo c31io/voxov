@@ -73,6 +73,8 @@ message AuthenticateReply {
 
 message WhoAmIRequest {
     bytes token = 1;
+    string tel = 2;
+    string msg = 3;
 }
 
 message WhoAmIReply {
