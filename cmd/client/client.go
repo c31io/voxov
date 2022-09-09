@@ -23,7 +23,7 @@ func main() {
 	flag.Parse()
 	conn, err := grpc.Dial(*addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("Did not connect: %v", err)
 	}
 	defer conn.Close()
 	c := pb.NewVOxOVClient(conn)

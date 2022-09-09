@@ -64,7 +64,6 @@ message UpdateSessionReply {
 
 message AuthenticateRequest {
     bytes token = 1;
-    int64 ttl = 2;
 }
 
 message AuthenticateReply {

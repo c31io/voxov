@@ -63,6 +63,7 @@ func (s *Server) WaitMsg(ctx context.Context, in *pb.WaitMsgRequest) (*pb.WaitMs
 	return &pb.WaitMsgReply{Tel: tel, Msg: msg}, nil
 }
 
+// Received? New person?
 func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.CheckMsgReply, error) {
 	return &pb.CheckMsgReply{}, nil
 }

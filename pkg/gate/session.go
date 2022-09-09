@@ -74,8 +74,8 @@ func (s *Server) UpdateSession(ctx context.Context, in *pb.UpdateSessionRequest)
 	}
 }
 
-func isValidToken(ctx context.Context, token *[]byte) bool {
-	val, err := rdb.Exists(ctx, "s"+string(*token)).Result()
+func isValidToken(ctx context.Context, token []byte) bool {
+	val, err := rdb.Exists(ctx, "s"+string(token)).Result()
 	if err != nil {
 		Health.NowDead()
 		return false
