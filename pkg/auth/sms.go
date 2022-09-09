@@ -54,10 +54,14 @@ func (s *Server) WaitMsg(ctx context.Context, in *pb.WaitMsgRequest) (*pb.WaitMs
 	if err != nil {
 		log.Fatal("crypto/rand returned an error")
 	}
-	err = rdb.Set(ctx, "m"+string(in.GetToken())+tel+msg, "", waitMsgTtl).Err()
+	val, err := rdb.SetNX(ctx, "m"+string(in.GetToken())+tel+msg, "", waitMsgTtl).Result()
 	if err != nil {
-		log.Println("Failed to set on rdb")
+		log.Println("Failed to setnx on rdb")
 		Health.NowDead()
+		return &pb.WaitMsgReply{}, nil
+	}
+	if !val {
+		log.Println("The key was not set")
 		return &pb.WaitMsgReply{}, nil
 	}
 	return &pb.WaitMsgReply{Tel: tel, Msg: msg}, nil
