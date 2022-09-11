@@ -1,34 +1,20 @@
 package gate
 
 import (
-	"os"
+	"log"
 
+	r "github.com/c31io/voxov/pkg/rdb"
 	"github.com/go-redis/redis/v9"
 )
 
-var (
-	rdbAddr   string
-	rdbPasswd string
-	rdb       *redis.Client
-)
+var rdb *redis.Client
 
 func init() {
-	val, ok := os.LookupEnv("RDB_ADDR")
-	if !ok {
-		rdbAddr = "localhost:6379"
+	if r.Rdb != nil {
+		rdb = r.Rdb
 	} else {
-		rdbAddr = val
+		log.Fatal("rdb init failed")
 	}
-	val, ok = os.LookupEnv("RDB_PASSWD")
-	if !ok {
-		rdbPasswd = ""
-	} else {
-		rdbPasswd = val
-	}
-	rdb = redis.NewClient(&redis.Options{
-		Addr:     rdbAddr,
-		Password: rdbPasswd,
-	})
 }
 
 func minInt64(x, y int64) int64 {

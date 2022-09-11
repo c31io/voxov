@@ -10,3 +10,10 @@
 - int64 hid: Human ID, zero value if not a human
 - []string name(s): a list of used names
 - []string identity: passport, id card, driver license, etc.
+
+- int64 balance
+- (gene, limit, repeat) plan
+
+## Genes
+
+- int64 gid: Gene ID
