@@ -26,3 +26,10 @@ create database pdb;
 create user voxov with encrypted password 'forLocalDevOnly';
 grant all privileges on database pdb to voxov;
 '''
+
+Initiate tables.
+
+'''
+sudo cp ./deploy/init_pdb.sql /var/lib/postgresql/
+psql -d pdb -a -f VOxOVROOT/deploy/init_pdb.sql
+'''

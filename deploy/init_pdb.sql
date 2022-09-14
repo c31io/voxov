@@ -21,7 +21,7 @@ CREATE TABLE devices (
     last_in TIMESTAMP
 );
 CREATE INDEX dtoken_index ON devices (dtoken);
-CREATE INDEX pid_index    ON device (pid);
+CREATE INDEX pid_index    ON devices (pid);
 
 --Plans
 CREATE TABLE plans (
@@ -29,20 +29,20 @@ CREATE TABLE plans (
     pid     bigint NOT NULL,
     gid     bigint NOT NULL,
     vlimit  bigint NOT NULL,
-	billing TIMESTAMP NOT NULL,
+	billing TIMESTAMP NOT NULL
 );
 CREATE INDEX pid_index ON plans (pid);
 CREATE INDEX gid_index ON plans (gid);
 
 --Transfers
-CREATE TABLE transfers {
+CREATE TABLE transfers (
 	tid      bigserial PRIMARY KEY,
 	from_pid bigint NOT NULL,
 	to_pid   bigint NOT NULL,
 	volume   bigint NOT NULL,
 	note     varchar(1023),
 	ttime    TIMESTAMP NOT NULL
-};
+);
 CREATE INDEX from_pid_index ON transfers (from_pid);
 CREATE INDEX to_pid_index   ON transfers (to_pid);
 
