@@ -31,5 +31,5 @@ Initiate tables.
 
 '''
 sudo cp ./deploy/init_pdb.sql /var/lib/postgresql/
-psql -d pdb -a -f VOxOVROOT/deploy/init_pdb.sql
+psql -d pdb -a -f ./init_pdb.sql
 '''
