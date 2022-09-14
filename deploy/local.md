@@ -33,3 +33,13 @@ Initiate tables.
 sudo cp ./deploy/init_pdb.sql /var/lib/postgresql/
 psql -d pdb -a -f ./init_pdb.sql
 '''
+
+Drop and start all over.
+
+'''
+drop database pdb;
+create database pdb;
+grant all privileges on database pdb to voxov;
+\c pdb
+\i ./init_pdb.sql
+'''

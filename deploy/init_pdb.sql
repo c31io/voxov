@@ -9,19 +9,16 @@ CREATE TABLE people (
 	created TIMESTAMP NOT NULL,
     last_in TIMESTAMP
 );
-CREATE INDEX hid_index   ON people (hid);
-CREATE INDEX phone_index ON people (phone);
 
 --Devices
 CREATE TABLE devices (
     did     bigserial PRIMARY KEY,
-	dtoken  bytea NOT NULL,
+	dtoken  bytea UNIQUE NOT NULL,
     pid     bigint NOT NULL,
 	created TIMESTAMP NOT NULL,
     last_in TIMESTAMP
 );
-CREATE INDEX dtoken_index ON devices (dtoken);
-CREATE INDEX pid_index    ON devices (pid);
+CREATE INDEX devices_pid_index ON devices (pid);
 
 --Plans
 CREATE TABLE plans (
@@ -31,8 +28,8 @@ CREATE TABLE plans (
     vlimit  bigint NOT NULL,
 	billing TIMESTAMP NOT NULL
 );
-CREATE INDEX pid_index ON plans (pid);
-CREATE INDEX gid_index ON plans (gid);
+CREATE INDEX plans_pid_index ON plans (pid);
+CREATE INDEX plans_gid_index ON plans (gid);
 
 --Transfers
 CREATE TABLE transfers (
@@ -43,12 +40,12 @@ CREATE TABLE transfers (
 	note     varchar(1023),
 	ttime    TIMESTAMP NOT NULL
 );
-CREATE INDEX from_pid_index ON transfers (from_pid);
-CREATE INDEX to_pid_index   ON transfers (to_pid);
+CREATE INDEX transfers_from_pid_index ON transfers (from_pid);
+CREATE INDEX transfers_to_pid_index   ON transfers (to_pid);
 
 --Genes
 CREATE TABLE genes (
 	gid     bigserial PRIMARY KEY,
 	pid     bigint NOT NULL
 );
-CREATE INDEX pid_index ON genes (pid);
+CREATE INDEX genes_pid_index ON genes (pid);
