@@ -5,7 +5,6 @@ package auth
 
 import (
 	"context"
-	"encoding/binary"
 	"fmt"
 	"log"
 	"math/rand"
@@ -16,6 +15,7 @@ import (
 	"time"
 
 	pb "github.com/c31io/voxov/pkg/api/auth"
+	r "github.com/c31io/voxov/pkg/rdb"
 	"github.com/go-redis/redis/v9"
 )
 
@@ -112,9 +112,7 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		return &pb.CheckMsgReply{}, nil
 	}
 	// Set person for session
-	bpid := make([]byte, 8)
-	binary.LittleEndian.PutUint64(bpid, uint64(pid))
-	err = rdb.Set(ctx, "s"+string(token), string(bpid), redis.KeepTTL).Err()
+	err = rdb.Set(ctx, "s"+string(token), r.Int64ToByteSlice(pid), redis.KeepTTL).Err()
 	if err != nil {
 		log.Println("Failed to set person for session")
 		Health.NowDead()
