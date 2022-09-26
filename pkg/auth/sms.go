@@ -112,7 +112,7 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		return &pb.CheckMsgReply{}, nil
 	}
 	// Set person for session
-	err = rdb.Set(ctx, "s"+string(token), r.Int64ToByteSlice(pid), redis.KeepTTL).Err()
+	err = rdb.Set(ctx, "s"+string(token), string(r.Int64ToByteSlice(pid)), redis.KeepTTL).Err()
 	if err != nil {
 		log.Println("Failed to set person for session")
 		Health.NowDead()
