@@ -5,6 +5,7 @@ package auth
 
 import (
 	"context"
+	"encoding/binary"
 	"fmt"
 	"log"
 	"math/rand"
@@ -92,11 +93,32 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		Health.NowDead()
 		return &pb.CheckMsgReply{}, nil
 	}
-	// TODO: look up person for phone in pdb
-	// if not found create a new person
-	// set person of session
-	// return person
-	_ = token
-	_ = phone
-	return &pb.CheckMsgReply{}, nil
+	// If phone not found create a new person
+	_, err = pdb.QueryContext(ctx, `INSERT INTO people (balance, phone, created, last_in)
+	VALUES (0, $1, current_timestamp, current_timestamp)
+	ON CONFLICT (phone) DO NOTHING;`, phone)
+	if err != nil {
+		log.Println("Failed in pdb phone check")
+		Health.NowDead()
+		return &pb.CheckMsgReply{}, nil
+	}
+	// Get pid
+	var pid int64
+	err = pdb.QueryRowContext(ctx, `SELECT pid
+	FROM people WHERE phone = $1;`, phone).Scan(&pid)
+	if err != nil {
+		log.Println("Failed to get pid by phone")
+		Health.NowDead()
+		return &pb.CheckMsgReply{}, nil
+	}
+	// Set person for session
+	bpid := make([]byte, 8)
+	binary.LittleEndian.PutUint64(bpid, uint64(pid))
+	err = rdb.Set(ctx, "s"+string(token), string(bpid), redis.KeepTTL).Err()
+	if err != nil {
+		log.Println("Failed to set person for session")
+		Health.NowDead()
+		return &pb.CheckMsgReply{}, nil
+	}
+	return &pb.CheckMsgReply{Person: pid}, nil
 }

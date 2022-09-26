@@ -7,7 +7,7 @@ CREATE TABLE people (
 	pname   varchar(1023),
 	id_doc  varchar(1023) UNIQUE,
 	created TIMESTAMP NOT NULL,
-    last_in TIMESTAMP
+    last_in TIMESTAMP NOT NULL
 );
 
 --Devices
