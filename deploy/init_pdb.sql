@@ -16,7 +16,7 @@ CREATE TABLE devices (
 	dtoken  bytea UNIQUE NOT NULL,
     pid     bigint NOT NULL,
 	created TIMESTAMP NOT NULL,
-    last_in TIMESTAMP
+    last_in TIMESTAMP NOT NULL
 );
 CREATE INDEX devices_pid_index ON devices (pid);
 

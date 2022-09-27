@@ -11,7 +11,10 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var authAddr string
+var (
+	authAddr string
+	authConn *grpc.ClientConn
+)
 
 func init() {
 	val, ok := os.LookupEnv("AUTH_ADDR")
@@ -20,6 +23,11 @@ func init() {
 	} else {
 		authAddr = val
 	}
+	var err error
+	authConn, err = grpc.Dial(authAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Fatalf("Did not connect: %v", err)
+	}
 }
 
 // Client requests what to send to who to authenticate.
@@ -27,14 +35,7 @@ func (s *Server) Authenticate(ctx context.Context, in *pb.AuthenticateRequest) (
 	if !isValidToken(ctx, in.GetToken()) {
 		return &pb.AuthenticateReply{}, nil
 	}
-	conn, err := grpc.Dial(authAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Printf("Did not connect: %v", err)
-		Health.NowDead()
-		return &pb.AuthenticateReply{}, nil
-	}
-	defer conn.Close()
-	c := pbAuth.NewAuthClient(conn)
+	c := pbAuth.NewAuthClient(authConn)
 	r, err := c.WaitMsg(ctx, &pbAuth.WaitMsgRequest{Token: in.GetToken()})
 	if err != nil {
 		log.Println("Failed to get WaitMsgReply")
@@ -49,14 +50,7 @@ func (s *Server) WhoAmI(ctx context.Context, in *pb.WhoAmIRequest) (*pb.WhoAmIRe
 	if !isValidToken(ctx, in.GetToken()) {
 		return &pb.WhoAmIReply{}, nil
 	}
-	conn, err := grpc.Dial(authAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Println("Failed to get WaitMsgReply")
-		Health.NowDead()
-		return &pb.WhoAmIReply{}, nil
-	}
-	defer conn.Close()
-	c := pbAuth.NewAuthClient(conn)
+	c := pbAuth.NewAuthClient(authConn)
 	r, err := c.CheckMsg(ctx, &pbAuth.CheckMsgRequest{Token: in.GetToken(), Tel: in.GetTel(), Msg: in.GetMsg()})
 	if err != nil {
 		log.Println("Failed to get WhoAmIReply")

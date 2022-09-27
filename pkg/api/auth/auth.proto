@@ -7,6 +7,7 @@ package voxov;
 service Auth {
     rpc WaitMsg (WaitMsgRequest) returns (WaitMsgReply);
     rpc CheckMsg (CheckMsgRequest) returns (CheckMsgReply);
+    rpc NewDevice (NewDeviceRequest) returns (NewDeviceReply);
 
     /* TODO
     rpc ChangePhone
@@ -33,4 +34,15 @@ message CheckMsgRequest {
 
 message CheckMsgReply {
     int64 person = 1;
+}
+
+message NewDeviceRequest {
+    bytes token = 1;
+    bytes dtoken = 2;
+    string name = 3;
+    string info = 4;
+}
+
+message NewDeviceReply {
+    bool ok = 1;
 }
