@@ -37,7 +37,7 @@ func init() {
 	}
 	val, ok = os.LookupEnv("TELS")
 	if !ok {
-		log.Fatal("TEL must not be empty")
+		log.Fatal("TELS must not be empty")
 	} else {
 		tels = strings.Split(val, ":")
 		re := regexp.MustCompile(`^(?:(?:\(?(?:00|\+)([1-4]\d\d|[1-9]\d?)\)?)?[\-\.\ \\\/]?)?((?:\(?\d{1,}\)?[\-\.\ \\\/]?){0,})(?:[\-\.\ \\\/]?(?:#|ext\.?|extension|x)[\-\.\ \\\/]?(\d+))?$`)
