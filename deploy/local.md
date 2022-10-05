@@ -1,7 +1,11 @@
-Install databases.
+# Deploy Locally
+
+## Start Databases
+
+Install databases on Ubuntu 22.04.1 LTS.
 
 '''
-sudo snap install redis
+sudo snap install redis # apt redis is too old
 sudo apt install postgresql
 '''
 
@@ -43,3 +47,15 @@ grant all privileges on database pdb to voxov;
 \c pdb
 \i ./init_pdb.sql
 '''
+
+## Build Services
+
+'''
+./build/api.sh      # Generate internal APIs
+./build/extapi.sh   # Generate external APIs
+./build/service.sh  # Build executables
+'''
+
+## Run Services
+
+Execute all binaries in ./build/bin
