@@ -5,13 +5,13 @@ option go_package = "github.com/c31io/voxov/api";
 package voxov;
 
 service VOxOV {
-    // session
+    // gate session
     rpc CreateSession (CreateSessionRequest) returns (CreateSessionReply);
     rpc UpdateSession (UpdateSessionRequest) returns (UpdateSessionReply);
-    // authenticate
+    // auth authenticate
     rpc Authenticate (AuthenticateRequest) returns (AuthenticateReply);
     rpc WhoAmI (WhoAmIRequest) returns (WhoAmIReply);
-    // device
+    // auth device
     rpc CreateDevice(CreateDeviceRequest) returns (CreateDeviceReply);
 
     /* TODO
