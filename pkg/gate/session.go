@@ -53,23 +53,28 @@ func (s *Server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest)
 		Health.NowDead()
 		return &pb.CreateSessionReply{ApiVersion: apiVersion}, nil
 	}
+	log.Println("Created session")
 	return &pb.CreateSessionReply{ApiVersion: apiVersion, Token: token}, nil
 }
 
 // Assign ttl if session is not expired.
 func (s *Server) UpdateSession(ctx context.Context, in *pb.UpdateSessionRequest) (*pb.UpdateSessionReply, error) {
 	if in.GetTtl() <= 0 {
+		log.Println("Nonpositive ttl")
 		return &pb.UpdateSessionReply{Ok: false}, nil
 	}
 	ttl := minInt64(sessionMaxTtl, in.GetTtl())
 	val, err := rdb.ExpireXX(ctx, "s"+string(in.GetToken()), time.Duration(ttl)*time.Second).Result()
 	if err != nil {
+		log.Println("Failed to expirexx on rdb")
 		Health.NowDead()
 		return &pb.UpdateSessionReply{Ok: false}, nil
 	}
 	if val {
+		log.Println("Updated session")
 		return &pb.UpdateSessionReply{Ok: true}, nil
 	} else {
+		log.Println("Failed to update session")
 		return &pb.UpdateSessionReply{Ok: false}, nil
 	}
 }
@@ -77,12 +82,15 @@ func (s *Server) UpdateSession(ctx context.Context, in *pb.UpdateSessionRequest)
 func isValidToken(ctx context.Context, token []byte) bool {
 	val, err := rdb.Exists(ctx, "s"+string(token)).Result()
 	if err != nil {
+		log.Println("Failed to exist on rdb")
 		Health.NowDead()
 		return false
 	}
 	if val == 0 {
+		log.Println("Invalid token")
 		return false
 	} else {
+		log.Println("Valid token")
 		return true
 	}
 }
