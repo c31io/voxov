@@ -12,13 +12,19 @@ service VOxOV {
     rpc Authenticate (AuthenticateRequest) returns (AuthenticateReply);
     rpc WhoAmI (WhoAmIRequest) returns (WhoAmIReply);
     // auth device
-    rpc CreateDevice(CreateDeviceRequest) returns (CreateDeviceReply);
+    rpc CreateDevice(Device) returns (Device);
+    rpc ReadDevice(Device) returns (Device);
+    rpc UpdateDevice(Device) returns (Device);
+    rpc DeleteDevice(Device) returns (Device);
+    rpc ListDevice(ListDeviceRequest) returns (ListDeviceReply);
+    rpc AuthDevice(AuthDeviceRequest) returns (AuthDeviceReply);
 
     /* TODO
-    rpc ReadDevice() returns ();
-    rpc UpdateDevice() returns ();
-    rpc DeleteDevice() returns ();
-    rpc ListDevice() returns ();
+    // person
+    rpc UpdatePhone
+    rpc WhichPhone
+    rpc CreateHuman
+    rpc DeleteHuman
     // pay
     rpc Pay () returns ();
     rpc Refund () returns ();
@@ -54,8 +60,8 @@ message CreateSessionReply {
 }
 
 message UpdateSessionRequest {
-    bytes token = 1;
-    int64 ttl = 2;
+    int64 ttl = 1;
+    bytes token = 2;
 }
 
 message UpdateSessionReply {
@@ -72,22 +78,40 @@ message AuthenticateReply {
 }
 
 message WhoAmIRequest {
-    bytes token = 1;
-    string tel = 2;
-    string msg = 3;
+    string tel = 1;
+    string msg = 2;
+    bytes token = 3;
 }
 
 message WhoAmIReply {
     int64 person = 1;
 }
 
-message CreateDeviceRequest {
-    bytes token = 1;
+message Device {
+    int64 did = 1;
     bytes dtoken = 2;
-    string name = 3;
-    string info = 4;
+    string dname = 3;
+    string dinfo = 4;
+    int64 pid = 5;
+    int64 created = 6; // UTC UnixMicro
+    int64 last_in = 7;
+    bytes token = 8;
 }
 
-message CreateDeviceReply {
-    bool ok = 1;
+message ListDeviceRequest {
+    bytes token = 8;
+}
+
+message ListDeviceReply {
+    repeated Device devices = 1;
+}
+
+
+message AuthDeviceRequest {
+    bytes dtoken = 1;
+    bytes token = 2;
+}
+
+message AuthDeviceReply {
+    int64 did = 1;
 }

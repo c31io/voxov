@@ -5,15 +5,25 @@ option go_package = "github.com/c31io/voxov/api";
 package voxov;
 
 service Auth {
-    rpc WaitMsg (WaitMsgRequest) returns (WaitMsgReply);
-    rpc CheckMsg (CheckMsgRequest) returns (CheckMsgReply);
-    rpc NewDevice (NewDeviceRequest) returns (NewDeviceReply);
+    // sms auth
+    rpc WaitMsg (WaitMsgRequest) returns (WaitMsgReply); // Authenticate
+    rpc CheckMsg (CheckMsgRequest) returns (CheckMsgReply); // WhoAmI
+    // device crud
+    rpc NewDevice (Device) returns (Device); // CreateDevice
+    rpc GetDevice (Device) returns (Device); // ReadDevice
+    rpc EditDevice (Device) returns (Device); // UpdateDevice
+    rpc RemoveDevice (Device) returns (Device); // DeleteDevice
+    rpc AllDevice (AllDeviceRequest) returns (AllDeviceReply); // ListDevice
+    // device auth
+    rpc CheckDevice (CheckDeviceRequest) returns (CheckDeviceReply); // AuthDevice
 
     /* TODO
-    rpc ChangePhone
-    rpc PersonIsHuman
-    rpc ReadPerson
-    rpc DeletePerson
+    rpc EditPhone // UpdatePhone
+    rpc CheckPhone // WhichPhone
+    rpc PersonIsHuman // CreateHuman
+    rpc RemoveHuman // DeleteHuman
+    rpc GetPerson // by pid, phone, or id_doc
+    rpc RemovePerson // add a removed_at entry to person table
     */
 }
 
@@ -36,13 +46,28 @@ message CheckMsgReply {
     int64 person = 1;
 }
 
-message NewDeviceRequest {
-    bytes token = 1;
+message Device {
+    int64 did = 1;
     bytes dtoken = 2;
-    string name = 3;
-    string info = 4;
+    string dname = 3;
+    string dinfo = 4;
+    int64 pid = 5;
+    int64 created = 6; // UTC UnixMicro
+    int64 last_in = 7;
 }
 
-message NewDeviceReply {
-    bool ok = 1;
+message AllDeviceRequest {
+    int64 pid = 1;
+}
+
+message AllDeviceReply {
+    repeated Device devices = 1;
+}
+
+message CheckDeviceRequest {
+    bytes dtoken = 1;
+}
+
+message CheckDeviceReply {
+    int64 did = 1;
 }

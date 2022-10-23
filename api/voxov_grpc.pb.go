@@ -22,14 +22,19 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type VOxOVClient interface {
-	// session
+	// gate session
 	CreateSession(ctx context.Context, in *CreateSessionRequest, opts ...grpc.CallOption) (*CreateSessionReply, error)
 	UpdateSession(ctx context.Context, in *UpdateSessionRequest, opts ...grpc.CallOption) (*UpdateSessionReply, error)
-	// authenticate
+	// auth authenticate
 	Authenticate(ctx context.Context, in *AuthenticateRequest, opts ...grpc.CallOption) (*AuthenticateReply, error)
 	WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grpc.CallOption) (*WhoAmIReply, error)
-	// device
-	CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceReply, error)
+	// auth device
+	CreateDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error)
+	ReadDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error)
+	UpdateDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error)
+	DeleteDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error)
+	ListDevice(ctx context.Context, in *ListDeviceRequest, opts ...grpc.CallOption) (*ListDeviceReply, error)
+	AuthDevice(ctx context.Context, in *AuthDeviceRequest, opts ...grpc.CallOption) (*AuthDeviceReply, error)
 }
 
 type vOxOVClient struct {
@@ -76,9 +81,54 @@ func (c *vOxOVClient) WhoAmI(ctx context.Context, in *WhoAmIRequest, opts ...grp
 	return out, nil
 }
 
-func (c *vOxOVClient) CreateDevice(ctx context.Context, in *CreateDeviceRequest, opts ...grpc.CallOption) (*CreateDeviceReply, error) {
-	out := new(CreateDeviceReply)
+func (c *vOxOVClient) CreateDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
+	out := new(Device)
 	err := c.cc.Invoke(ctx, "/voxov.VOxOV/CreateDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) ReadDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
+	out := new(Device)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/ReadDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) UpdateDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
+	out := new(Device)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/UpdateDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) DeleteDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
+	out := new(Device)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/DeleteDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) ListDevice(ctx context.Context, in *ListDeviceRequest, opts ...grpc.CallOption) (*ListDeviceReply, error) {
+	out := new(ListDeviceReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/ListDevice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *vOxOVClient) AuthDevice(ctx context.Context, in *AuthDeviceRequest, opts ...grpc.CallOption) (*AuthDeviceReply, error) {
+	out := new(AuthDeviceReply)
+	err := c.cc.Invoke(ctx, "/voxov.VOxOV/AuthDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -89,14 +139,19 @@ func (c *vOxOVClient) CreateDevice(ctx context.Context, in *CreateDeviceRequest,
 // All implementations must embed UnimplementedVOxOVServer
 // for forward compatibility
 type VOxOVServer interface {
-	// session
+	// gate session
 	CreateSession(context.Context, *CreateSessionRequest) (*CreateSessionReply, error)
 	UpdateSession(context.Context, *UpdateSessionRequest) (*UpdateSessionReply, error)
-	// authenticate
+	// auth authenticate
 	Authenticate(context.Context, *AuthenticateRequest) (*AuthenticateReply, error)
 	WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIReply, error)
-	// device
-	CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceReply, error)
+	// auth device
+	CreateDevice(context.Context, *Device) (*Device, error)
+	ReadDevice(context.Context, *Device) (*Device, error)
+	UpdateDevice(context.Context, *Device) (*Device, error)
+	DeleteDevice(context.Context, *Device) (*Device, error)
+	ListDevice(context.Context, *ListDeviceRequest) (*ListDeviceReply, error)
+	AuthDevice(context.Context, *AuthDeviceRequest) (*AuthDeviceReply, error)
 	mustEmbedUnimplementedVOxOVServer()
 }
 
@@ -116,8 +171,23 @@ func (UnimplementedVOxOVServer) Authenticate(context.Context, *AuthenticateReque
 func (UnimplementedVOxOVServer) WhoAmI(context.Context, *WhoAmIRequest) (*WhoAmIReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method WhoAmI not implemented")
 }
-func (UnimplementedVOxOVServer) CreateDevice(context.Context, *CreateDeviceRequest) (*CreateDeviceReply, error) {
+func (UnimplementedVOxOVServer) CreateDevice(context.Context, *Device) (*Device, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDevice not implemented")
+}
+func (UnimplementedVOxOVServer) ReadDevice(context.Context, *Device) (*Device, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReadDevice not implemented")
+}
+func (UnimplementedVOxOVServer) UpdateDevice(context.Context, *Device) (*Device, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateDevice not implemented")
+}
+func (UnimplementedVOxOVServer) DeleteDevice(context.Context, *Device) (*Device, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteDevice not implemented")
+}
+func (UnimplementedVOxOVServer) ListDevice(context.Context, *ListDeviceRequest) (*ListDeviceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListDevice not implemented")
+}
+func (UnimplementedVOxOVServer) AuthDevice(context.Context, *AuthDeviceRequest) (*AuthDeviceReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AuthDevice not implemented")
 }
 func (UnimplementedVOxOVServer) mustEmbedUnimplementedVOxOVServer() {}
 
@@ -205,7 +275,7 @@ func _VOxOV_WhoAmI_Handler(srv interface{}, ctx context.Context, dec func(interf
 }
 
 func _VOxOV_CreateDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateDeviceRequest)
+	in := new(Device)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -217,7 +287,97 @@ func _VOxOV_CreateDevice_Handler(srv interface{}, ctx context.Context, dec func(
 		FullMethod: "/voxov.VOxOV/CreateDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VOxOVServer).CreateDevice(ctx, req.(*CreateDeviceRequest))
+		return srv.(VOxOVServer).CreateDevice(ctx, req.(*Device))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_ReadDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Device)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).ReadDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/ReadDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).ReadDevice(ctx, req.(*Device))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_UpdateDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Device)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).UpdateDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/UpdateDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).UpdateDevice(ctx, req.(*Device))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_DeleteDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Device)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).DeleteDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/DeleteDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).DeleteDevice(ctx, req.(*Device))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_ListDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).ListDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/ListDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).ListDevice(ctx, req.(*ListDeviceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _VOxOV_AuthDevice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AuthDeviceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(VOxOVServer).AuthDevice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/voxov.VOxOV/AuthDevice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(VOxOVServer).AuthDevice(ctx, req.(*AuthDeviceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -248,6 +408,26 @@ var VOxOV_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateDevice",
 			Handler:    _VOxOV_CreateDevice_Handler,
+		},
+		{
+			MethodName: "ReadDevice",
+			Handler:    _VOxOV_ReadDevice_Handler,
+		},
+		{
+			MethodName: "UpdateDevice",
+			Handler:    _VOxOV_UpdateDevice_Handler,
+		},
+		{
+			MethodName: "DeleteDevice",
+			Handler:    _VOxOV_DeleteDevice_Handler,
+		},
+		{
+			MethodName: "ListDevice",
+			Handler:    _VOxOV_ListDevice_Handler,
+		},
+		{
+			MethodName: "AuthDevice",
+			Handler:    _VOxOV_AuthDevice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

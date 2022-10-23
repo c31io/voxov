@@ -6,6 +6,7 @@ CREATE TABLE people (
 	phone   varchar(15) UNIQUE NOT NULL,
 	pname   varchar(1023),
 	id_doc  varchar(1023) UNIQUE,
+	dlimit  int NOT NULL,
 	created TIMESTAMP NOT NULL,
     last_in TIMESTAMP NOT NULL
 );
@@ -14,6 +15,8 @@ CREATE TABLE people (
 CREATE TABLE devices (
     did     bigserial PRIMARY KEY,
 	dtoken  bytea UNIQUE NOT NULL,
+	dname   varchar(1023),
+	dinfo   varchar(1023),
     pid     bigint NOT NULL,
 	created TIMESTAMP NOT NULL,
     last_in TIMESTAMP NOT NULL

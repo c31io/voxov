@@ -9,16 +9,27 @@ import (
 )
 
 // Create a new device
-func (s *Server) CreateDevice(ctx context.Context, in *pb.CreateDeviceRequest) (*pb.CreateDeviceReply, error) {
+func (s *Server) CreateDevice(ctx context.Context, in *pb.Device) (*pb.Device, error) {
 	if !isValidToken(ctx, in.GetToken()) {
-		return &pb.CreateDeviceReply{}, nil
+		return &pb.Device{}, nil
 	}
 	c := pbAuth.NewAuthClient(authConn)
-	r, err := c.NewDevice(ctx, &pbAuth.NewDeviceRequest{Token: in.GetToken(), Dtoken: in.GetDtoken(), Name: in.GetName(), Info: in.GetInfo()})
+	r, err := c.NewDevice(ctx, &pbAuth.Device{
+		Dname: in.GetDname(),
+		Dinfo: in.GetDinfo(),
+	})
 	if err != nil {
 		log.Println("Failed to get NewDeviceReply")
 		Health.NowDead()
-		return &pb.CreateDeviceReply{}, nil
+		return &pb.Device{}, nil
 	}
-	return &pb.CreateDeviceReply{Ok: r.GetOk()}, nil
+	return &pb.Device{
+		Did:     r.GetDid(),
+		Dtoken:  r.GetDtoken(),
+		Dname:   r.GetDname(),
+		Dinfo:   r.GetDinfo(),
+		Pid:     r.GetPid(),
+		Created: r.GetCreated(),
+		LastIn:  r.GetLastIn(),
+	}, nil
 }
