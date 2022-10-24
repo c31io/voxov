@@ -26,6 +26,7 @@ func (s *Server) CreateDevice(ctx context.Context, in *pb.Device) (*pb.Device, e
 		Health.NowDead()
 		return &pb.Device{}, nil
 	}
+	log.Println("Created device")
 	return &pb.Device{
 		Did:     r.GetDid(),
 		Dtoken:  r.GetDtoken(),
@@ -38,5 +39,28 @@ func (s *Server) CreateDevice(ctx context.Context, in *pb.Device) (*pb.Device, e
 }
 
 func (s *Server) ReadDevice(ctx context.Context, in *pb.Device) (*pb.Device, error) {
-	return &pb.Device{}, nil
+	pid := getPid(ctx, in.GetToken())
+	if pid == 0 {
+		log.Println("Failed to get pid")
+		return &pb.Device{}, nil
+	}
+	c := pbAuth.NewAuthClient(authConn)
+	r, err := c.GetDevice(ctx, &pbAuth.Device{
+		Did: in.GetDid(),
+		Pid: pid,
+	})
+	if err != nil {
+		log.Println("Failed to read device: " + err.Error())
+		return &pb.Device{}, nil
+	}
+	log.Println("Read device")
+	return &pb.Device{
+		Did:     r.GetDid(),
+		Dtoken:  r.GetDtoken(),
+		Dname:   r.GetDname(),
+		Dinfo:   r.GetDinfo(),
+		Pid:     r.GetPid(),
+		Created: r.GetCreated(),
+		LastIn:  r.GetLastIn(),
+	}, nil
 }

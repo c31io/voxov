@@ -27,29 +27,48 @@ func (s *Server) NewDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 	dname := in.GetDname()
 	dinfo := in.GetDinfo()
 	pid := in.GetPid()
-	rows, err := pdb.QueryContext(ctx, `INSERT INTO devices (dtoken, dname, dinfo, pid, created, last_in)
+	row := pdb.QueryRowContext(ctx, `INSERT INTO devices (dtoken, dname, dinfo, pid, created, last_in)
 	VALUES ($1, $2, $3, $4, current_timestamp, current_timestamp)
 	ON CONFLICT (dtoken) DO NOTHING;
 	RETURNING (did, created, last_in)`, dtoken, dname, dinfo, pid)
-	if err != nil {
-		log.Println("Failed to create new device: " + err.Error())
-		Health.NowDead()
-		return &pb.Device{}, nil
-	}
 	var did int64
 	var created, last_in time.Time
-	err = rows.Scan(did, created, last_in)
+	err := row.Scan(did, created, last_in)
 	if err != nil {
 		log.Println("Failed to scan new device:" + err.Error())
 		Health.NowDead()
 		return &pb.Device{}, nil
 	}
+	log.Println("Create device")
 	return &pb.Device{
 		Did:     did,
 		Dtoken:  dtoken,
 		Dname:   dname,
 		Dinfo:   dinfo,
 		Pid:     pid,
+		Created: p.TimeToMs(created),
+		LastIn:  p.TimeToMs(last_in),
+	}, nil
+}
+
+func (s *Server) GetDevice(ctx context.Context, in *pb.Device) (*pb.Device, error) {
+	did := in.GetDid()
+	pid := in.GetPid()
+	row := pdb.QueryRowContext(ctx, `SELECT (did, dname, dinfo, pid, created, last_in) FROM devices
+	WHERE did = $1 AND pid = $2`, did, pid)
+	var dname, dinfo string
+	var created, last_in time.Time
+	err := row.Scan(did, dname, dinfo, pid, created, last_in)
+	if err != nil {
+		log.Println("Device not found")
+		return &pb.Device{}, nil
+	}
+	log.Println("Got device")
+	return &pb.Device{
+		Did:     in.GetDid(),
+		Dname:   in.GetDname(),
+		Dinfo:   in.GetDinfo(),
+		Pid:     in.GetPid(),
 		Created: p.TimeToMs(created),
 		LastIn:  p.TimeToMs(last_in),
 	}, nil
