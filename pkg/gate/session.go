@@ -9,6 +9,8 @@ import (
 	"time"
 
 	pb "github.com/c31io/voxov/api"
+	r "github.com/c31io/voxov/pkg/rdb"
+	"github.com/go-redis/redis/v9"
 )
 
 // It takes more than 1.7*10^8 years to randomly guess one
@@ -93,4 +95,18 @@ func isValidToken(ctx context.Context, token []byte) bool {
 		log.Println("Valid token")
 		return true
 	}
+}
+
+func getPid(ctx context.Context, token []byte) int64 {
+	val, err := rdb.Get(ctx, "s"+string(token)).Result()
+	if err == redis.Nil {
+		log.Println("Failed to get pid on rdb: invalid token")
+		return 0
+	} else if err != nil {
+		log.Println("Failed to get on rdb")
+		Health.NowDead()
+		return 0
+	}
+	log.Println("Pid got")
+	return r.ByteSliceToInt64([]byte(val))
 }

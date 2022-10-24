@@ -10,13 +10,16 @@ import (
 
 // Create a new device
 func (s *Server) CreateDevice(ctx context.Context, in *pb.Device) (*pb.Device, error) {
-	if !isValidToken(ctx, in.GetToken()) {
+	pid := getPid(ctx, in.GetToken())
+	if pid == 0 {
+		log.Println("Failed to get pid")
 		return &pb.Device{}, nil
 	}
 	c := pbAuth.NewAuthClient(authConn)
 	r, err := c.NewDevice(ctx, &pbAuth.Device{
 		Dname: in.GetDname(),
 		Dinfo: in.GetDinfo(),
+		Pid:   pid,
 	})
 	if err != nil {
 		log.Println("Failed to get NewDeviceReply")
@@ -32,4 +35,8 @@ func (s *Server) CreateDevice(ctx context.Context, in *pb.Device) (*pb.Device, e
 		Created: r.GetCreated(),
 		LastIn:  r.GetLastIn(),
 	}, nil
+}
+
+func (s *Server) ReadDevice(ctx context.Context, in *pb.Device) (*pb.Device, error) {
+	return &pb.Device{}, nil
 }
