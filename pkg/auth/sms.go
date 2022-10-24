@@ -94,8 +94,8 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		return &pb.CheckMsgReply{}, nil
 	}
 	// If phone not found create a new person
-	_, err = pdb.QueryContext(ctx, `INSERT INTO people (balance, phone, created, last_in)
-	VALUES (0, $1, current_timestamp, current_timestamp)
+	_, err = pdb.QueryContext(ctx, `INSERT INTO people (balance, phone, dlimit, created, last_in)
+	VALUES (0, $1, 1, current_timestamp, current_timestamp)
 	ON CONFLICT (phone) DO NOTHING;`, phone)
 	if err != nil {
 		log.Println("Failed in pdb phone check")

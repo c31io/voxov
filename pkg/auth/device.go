@@ -27,6 +27,7 @@ func (s *Server) NewDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 	dname := in.GetDname()
 	dinfo := in.GetDinfo()
 	pid := in.GetPid()
+	// TODO check dlimit, if exceeded, update the coldest device
 	row := pdb.QueryRowContext(ctx, `INSERT INTO devices (dtoken, dname, dinfo, pid, created, last_in)
 	VALUES ($1, $2, $3, $4, current_timestamp, current_timestamp)
 	ON CONFLICT (dtoken) DO NOTHING;
@@ -65,11 +66,27 @@ func (s *Server) GetDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 	}
 	log.Println("Got device")
 	return &pb.Device{
-		Did:     in.GetDid(),
-		Dname:   in.GetDname(),
-		Dinfo:   in.GetDinfo(),
-		Pid:     in.GetPid(),
+		Did:     did,
+		Dname:   dname,
+		Dinfo:   in.Dinfo,
+		Pid:     pid,
 		Created: p.TimeToMs(created),
 		LastIn:  p.TimeToMs(last_in),
+	}, nil
+}
+
+func (s *Server) CheckDevice(ctx context.Context, in *pb.CheckDeviceRequest) (*pb.CheckDeviceReply, error) {
+	dtoken := in.GetDtoken()
+	row := pdb.QueryRowContext(ctx, `SELECT did FROM devices
+	WHERE dtoken = $1`, dtoken)
+	var did int64
+	err := row.Scan(did)
+	if err != nil {
+		log.Println("dtoken not found")
+		return &pb.CheckDeviceReply{}, nil
+	}
+	log.Println("CheckDevice")
+	return &pb.CheckDeviceReply{
+		Did: did,
 	}, nil
 }
