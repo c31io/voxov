@@ -49,7 +49,7 @@ func (s *Server) CreateSession(ctx context.Context, in *pb.CreateSessionRequest)
 	}
 	token := genToken()
 	ttl := minInt64(sessionMaxTtl, in.GetTtl())
-	err := rdb.Set(ctx, "s"+string(token), "", time.Duration(ttl)*time.Second).Err()
+	err := rdb.Set(ctx, "s"+string(token), r.Int64ToByteSlice(0), time.Duration(ttl)*time.Second).Err()
 	if err != nil {
 		log.Println("Failed to set on rdb")
 		Health.NowDead()

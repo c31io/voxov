@@ -77,10 +77,10 @@ func (s *Server) GetDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 
 func (s *Server) CheckDevice(ctx context.Context, in *pb.CheckDeviceRequest) (*pb.CheckDeviceReply, error) {
 	dtoken := in.GetDtoken()
-	row := pdb.QueryRowContext(ctx, `SELECT did FROM devices
+	row := pdb.QueryRowContext(ctx, `SELECT did, pid FROM devices
 	WHERE dtoken = $1`, dtoken)
-	var did int64
-	err := row.Scan(did)
+	var did, pid int64
+	err := row.Scan(did, pid)
 	if err != nil {
 		log.Println("dtoken not found")
 		return &pb.CheckDeviceReply{}, nil
@@ -88,5 +88,6 @@ func (s *Server) CheckDevice(ctx context.Context, in *pb.CheckDeviceRequest) (*p
 	log.Println("CheckDevice")
 	return &pb.CheckDeviceReply{
 		Did: did,
+		Pid: pid,
 	}, nil
 }

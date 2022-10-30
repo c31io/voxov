@@ -112,8 +112,11 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		return &pb.CheckMsgReply{}, nil
 	}
 	// Set person for session
-	err = rdb.Set(ctx, "s"+string(token), string(r.Int64ToByteSlice(pid)), redis.KeepTTL).Err()
-	if err != nil {
+	err = rdb.SetXX(ctx, "s"+string(token), r.Int64ToByteSlice(pid), redis.KeepTTL).Err()
+	if err == redis.Nil {
+		log.Println("Session expired during authentication")
+		return &pb.CheckMsgReply{}, nil
+	} else if err != nil {
 		log.Println("Failed to set person for session")
 		Health.NowDead()
 		return &pb.CheckMsgReply{}, nil

@@ -6,6 +6,8 @@ import (
 
 	pb "github.com/c31io/voxov/api"
 	pbAuth "github.com/c31io/voxov/pkg/api/auth"
+	r "github.com/c31io/voxov/pkg/rdb"
+	"github.com/go-redis/redis/v9"
 )
 
 // Create a new device
@@ -80,16 +82,26 @@ func (s *Server) AuthDevice(ctx context.Context, in *pb.AuthDeviceRequest) (*pb.
 		return &pb.AuthDeviceReply{}, nil
 	}
 	c := pbAuth.NewAuthClient(authConn)
-	r, err := c.CheckDevice(ctx, &pbAuth.CheckDeviceRequest{
+	reply, err := c.CheckDevice(ctx, &pbAuth.CheckDeviceRequest{
 		Dtoken: in.GetDtoken(),
 	})
 	if err != nil {
-		log.Println("Failed to AuthDevice" + err.Error())
+		log.Println("Failed to AuthDevice: " + err.Error())
+		Health.NowDead()
+		return &pb.AuthDeviceReply{}, nil
+	}
+	err = rdb.SetXX(ctx, "s"+string(in.GetToken()), r.Int64ToByteSlice(reply.GetPid()), redis.KeepTTL).Err()
+	if err == redis.Nil {
+		log.Println("Session expired during authentication")
+		return &pb.AuthDeviceReply{}, nil
+	} else if err != nil {
+		log.Println("Failed to set rdb: " + err.Error())
 		Health.NowDead()
 		return &pb.AuthDeviceReply{}, nil
 	}
 	log.Println("AuthDevice")
 	return &pb.AuthDeviceReply{
-		Did: r.GetDid(),
+		Did: reply.GetDid(),
+		Pid: reply.GetPid(),
 	}, nil
 }

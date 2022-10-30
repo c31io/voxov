@@ -45,7 +45,7 @@ func NewAuthClient(cc grpc.ClientConnInterface) AuthClient {
 
 func (c *authClient) WaitMsg(ctx context.Context, in *WaitMsgRequest, opts ...grpc.CallOption) (*WaitMsgReply, error) {
 	out := new(WaitMsgReply)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/WaitMsg", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/WaitMsg", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +54,7 @@ func (c *authClient) WaitMsg(ctx context.Context, in *WaitMsgRequest, opts ...gr
 
 func (c *authClient) CheckMsg(ctx context.Context, in *CheckMsgRequest, opts ...grpc.CallOption) (*CheckMsgReply, error) {
 	out := new(CheckMsgReply)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/CheckMsg", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/CheckMsg", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,7 @@ func (c *authClient) CheckMsg(ctx context.Context, in *CheckMsgRequest, opts ...
 
 func (c *authClient) NewDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
 	out := new(Device)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/NewDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/NewDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -72,7 +72,7 @@ func (c *authClient) NewDevice(ctx context.Context, in *Device, opts ...grpc.Cal
 
 func (c *authClient) GetDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
 	out := new(Device)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/GetDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/GetDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (c *authClient) GetDevice(ctx context.Context, in *Device, opts ...grpc.Cal
 
 func (c *authClient) EditDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
 	out := new(Device)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/EditDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/EditDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (c *authClient) EditDevice(ctx context.Context, in *Device, opts ...grpc.Ca
 
 func (c *authClient) RemoveDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error) {
 	out := new(Device)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/RemoveDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/RemoveDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,7 +99,7 @@ func (c *authClient) RemoveDevice(ctx context.Context, in *Device, opts ...grpc.
 
 func (c *authClient) AllDevice(ctx context.Context, in *AllDeviceRequest, opts ...grpc.CallOption) (*AllDeviceReply, error) {
 	out := new(AllDeviceReply)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/AllDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/AllDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,7 +108,7 @@ func (c *authClient) AllDevice(ctx context.Context, in *AllDeviceRequest, opts .
 
 func (c *authClient) CheckDevice(ctx context.Context, in *CheckDeviceRequest, opts ...grpc.CallOption) (*CheckDeviceReply, error) {
 	out := new(CheckDeviceReply)
-	err := c.cc.Invoke(ctx, "/voxov.Auth/CheckDevice", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/CheckDevice", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -184,7 +184,7 @@ func _Auth_WaitMsg_Handler(srv interface{}, ctx context.Context, dec func(interf
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/WaitMsg",
+		FullMethod: "/voxov_auth.Auth/WaitMsg",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).WaitMsg(ctx, req.(*WaitMsgRequest))
@@ -202,7 +202,7 @@ func _Auth_CheckMsg_Handler(srv interface{}, ctx context.Context, dec func(inter
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/CheckMsg",
+		FullMethod: "/voxov_auth.Auth/CheckMsg",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).CheckMsg(ctx, req.(*CheckMsgRequest))
@@ -220,7 +220,7 @@ func _Auth_NewDevice_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/NewDevice",
+		FullMethod: "/voxov_auth.Auth/NewDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).NewDevice(ctx, req.(*Device))
@@ -238,7 +238,7 @@ func _Auth_GetDevice_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/GetDevice",
+		FullMethod: "/voxov_auth.Auth/GetDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).GetDevice(ctx, req.(*Device))
@@ -256,7 +256,7 @@ func _Auth_EditDevice_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/EditDevice",
+		FullMethod: "/voxov_auth.Auth/EditDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).EditDevice(ctx, req.(*Device))
@@ -274,7 +274,7 @@ func _Auth_RemoveDevice_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/RemoveDevice",
+		FullMethod: "/voxov_auth.Auth/RemoveDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).RemoveDevice(ctx, req.(*Device))
@@ -292,7 +292,7 @@ func _Auth_AllDevice_Handler(srv interface{}, ctx context.Context, dec func(inte
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/AllDevice",
+		FullMethod: "/voxov_auth.Auth/AllDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).AllDevice(ctx, req.(*AllDeviceRequest))
@@ -310,7 +310,7 @@ func _Auth_CheckDevice_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/voxov.Auth/CheckDevice",
+		FullMethod: "/voxov_auth.Auth/CheckDevice",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(AuthServer).CheckDevice(ctx, req.(*CheckDeviceRequest))
@@ -322,7 +322,7 @@ func _Auth_CheckDevice_Handler(srv interface{}, ctx context.Context, dec func(in
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Auth_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "voxov.Auth",
+	ServiceName: "voxov_auth.Auth",
 	HandlerType: (*AuthServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

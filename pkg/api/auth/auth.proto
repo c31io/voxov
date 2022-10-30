@@ -2,7 +2,7 @@ syntax = "proto3";
 
 option go_package = "github.com/c31io/voxov/api";
 
-package voxov;
+package voxov_auth;
 
 service Auth {
     // sms auth
@@ -70,4 +70,5 @@ message CheckDeviceRequest {
 
 message CheckDeviceReply {
     int64 did = 1;
+    int64 pid = 2;
 }

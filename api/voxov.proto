@@ -114,4 +114,5 @@ message AuthDeviceRequest {
 
 message AuthDeviceReply {
     int64 did = 1;
+    int64 pid = 2;
 }
