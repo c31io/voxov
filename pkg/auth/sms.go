@@ -56,7 +56,7 @@ func (s *Server) WaitMsg(ctx context.Context, in *pb.WaitMsgRequest) (*pb.WaitMs
 	if err != nil {
 		log.Fatal("crypto/rand returned an error")
 	}
-	val, err := rdb.SetNX(ctx, "m"+tel+msg, string(in.GetToken()), waitMsgTtl).Result()
+	val, err := rdb.SetNX(ctx, "m"+tel+"&"+msg, string(in.GetToken()), waitMsgTtl).Result()
 	if err != nil {
 		log.Println("Failed to setnx on rdb")
 		Health.NowDead()
@@ -73,7 +73,7 @@ func (s *Server) WaitMsg(ctx context.Context, in *pb.WaitMsgRequest) (*pb.WaitMs
 func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.CheckMsgReply, error) {
 	tel := in.GetTel()
 	msg := in.GetMsg()
-	token, err := rdb.Get(ctx, "m"+tel+msg).Result()
+	token, err := rdb.Get(ctx, "m"+tel+"&"+msg).Result()
 	if err == redis.Nil {
 		log.Println("Token not found")
 		return &pb.CheckMsgReply{}, nil
@@ -83,7 +83,7 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		Health.NowDead()
 		return &pb.CheckMsgReply{}, nil
 	}
-	phone, err := rdb.Get(ctx, "M"+tel+msg).Result()
+	phone, err := rdb.Get(ctx, "M"+tel+"&"+msg).Result()
 	if err == redis.Nil {
 		log.Println("Phone not found")
 		return &pb.CheckMsgReply{}, nil

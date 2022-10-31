@@ -19,7 +19,7 @@ func main() {
 		fmt.Print("Enter phone:")
 		fmt.Scanf("%s", &phone)
 		ctx := context.Background()
-		err := rdb.Set(ctx, "M"+tel+msg, phone, time.Minute).Err()
+		err := rdb.Set(ctx, "M"+tel+"&"+msg, phone, time.Minute).Err()
 		if err != nil {
 			fmt.Println("Set failed")
 		}
