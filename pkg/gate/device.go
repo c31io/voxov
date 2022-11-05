@@ -24,7 +24,7 @@ func (s *Server) CreateDevice(ctx context.Context, in *pb.Device) (*pb.Device, e
 		Pid:   pid,
 	})
 	if err != nil {
-		log.Println("Failed to get NewDeviceReply")
+		log.Println("Failed to NewDevice")
 		Health.NowDead()
 		return &pb.Device{}, nil
 	}

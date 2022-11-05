@@ -16,13 +16,13 @@ service Auth {
     rpc AllDevice (AllDeviceRequest) returns (AllDeviceReply); // ListDevice
     // device auth
     rpc CheckDevice (CheckDeviceRequest) returns (CheckDeviceReply); // AuthDevice
-
+    rpc GetPerson (Person) returns (Person);
+    rpc EditPerson (Person) returns (Person);
     /* TODO
     rpc EditPhone // UpdatePhone
     rpc CheckPhone // WhichPhone
     rpc PersonIsHuman // CreateHuman
     rpc RemoveHuman // DeleteHuman
-    rpc GetPerson // by pid, phone, or id_doc
     rpc RemovePerson // add a removed_at entry to person table
     */
 }
@@ -71,4 +71,16 @@ message CheckDeviceRequest {
 message CheckDeviceReply {
     int64 did = 1;
     int64 pid = 2;
+}
+
+message Person {
+    int64 pid = 1;
+    int64 hid = 2;
+    int64 balance = 3;
+    string phone = 4;
+    string pname = 5;
+    string id_doc = 6;
+    int32 dlimit = 7;
+    int64 created = 8;
+    int64 last_in = 9;
 }
