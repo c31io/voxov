@@ -29,6 +29,9 @@ Create database and user.
 create database pdb;
 create user voxov with encrypted password 'forLocalDevOnly';
 grant all privileges on database pdb to voxov;
+\c pdb
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO voxov;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public to voxov;
 '''
 
 Initiate tables.

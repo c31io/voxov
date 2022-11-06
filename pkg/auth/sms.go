@@ -98,7 +98,7 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 	VALUES (0, $1, 1, current_timestamp, current_timestamp)
 	ON CONFLICT (phone) DO NOTHING;`, phone)
 	if err != nil {
-		log.Println("Failed in pdb phone check")
+		log.Println("Failed in pdb phone check: " + err.Error())
 		Health.NowDead()
 		return &pb.CheckMsgReply{}, nil
 	}
@@ -121,5 +121,6 @@ func (s *Server) CheckMsg(ctx context.Context, in *pb.CheckMsgRequest) (*pb.Chec
 		Health.NowDead()
 		return &pb.CheckMsgReply{}, nil
 	}
+	log.Println("CheckMsg")
 	return &pb.CheckMsgReply{Person: pid}, nil
 }
