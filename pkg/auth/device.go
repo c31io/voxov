@@ -34,7 +34,7 @@ func (s *Server) NewDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 	RETURNING (did, created, last_in)`, dtoken, dname, dinfo, pid)
 	var did int64
 	var created, last_in time.Time
-	err := row.Scan(did, created, last_in)
+	err := row.Scan(&did, &created, &last_in)
 	if err != nil {
 		log.Println("Failed to scan new device:" + err.Error())
 		Health.NowDead()
@@ -55,11 +55,11 @@ func (s *Server) NewDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 func (s *Server) GetDevice(ctx context.Context, in *pb.Device) (*pb.Device, error) {
 	did := in.GetDid()
 	pid := in.GetPid()
-	row := pdb.QueryRowContext(ctx, `SELECT (did, dname, dinfo, pid, created, last_in) FROM devices
+	row := pdb.QueryRowContext(ctx, `SELECT did, dname, dinfo, pid, created, last_in FROM devices
 	WHERE did = $1 AND pid = $2`, did, pid)
 	var dname, dinfo string
 	var created, last_in time.Time
-	err := row.Scan(did, dname, dinfo, pid, created, last_in)
+	err := row.Scan(&did, &dname, &dinfo, &pid, &created, &last_in)
 	if err != nil {
 		log.Println("Device not found")
 		return &pb.Device{}, nil
@@ -80,7 +80,7 @@ func (s *Server) CheckDevice(ctx context.Context, in *pb.CheckDeviceRequest) (*p
 	row := pdb.QueryRowContext(ctx, `SELECT did, pid FROM devices
 	WHERE dtoken = $1`, dtoken)
 	var did, pid int64
-	err := row.Scan(did, pid)
+	err := row.Scan(&did, &pid)
 	if err != nil {
 		log.Println("dtoken not found")
 		return &pb.CheckDeviceReply{}, nil

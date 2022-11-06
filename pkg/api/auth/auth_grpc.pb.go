@@ -33,8 +33,8 @@ type AuthClient interface {
 	AllDevice(ctx context.Context, in *AllDeviceRequest, opts ...grpc.CallOption) (*AllDeviceReply, error)
 	// device auth
 	CheckDevice(ctx context.Context, in *CheckDeviceRequest, opts ...grpc.CallOption) (*CheckDeviceReply, error)
+	// person read
 	GetPerson(ctx context.Context, in *Person, opts ...grpc.CallOption) (*Person, error)
-	EditPerson(ctx context.Context, in *Person, opts ...grpc.CallOption) (*Person, error)
 }
 
 type authClient struct {
@@ -126,15 +126,6 @@ func (c *authClient) GetPerson(ctx context.Context, in *Person, opts ...grpc.Cal
 	return out, nil
 }
 
-func (c *authClient) EditPerson(ctx context.Context, in *Person, opts ...grpc.CallOption) (*Person, error) {
-	out := new(Person)
-	err := c.cc.Invoke(ctx, "/voxov_auth.Auth/EditPerson", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AuthServer is the server API for Auth service.
 // All implementations must embed UnimplementedAuthServer
 // for forward compatibility
@@ -150,8 +141,8 @@ type AuthServer interface {
 	AllDevice(context.Context, *AllDeviceRequest) (*AllDeviceReply, error)
 	// device auth
 	CheckDevice(context.Context, *CheckDeviceRequest) (*CheckDeviceReply, error)
+	// person read
 	GetPerson(context.Context, *Person) (*Person, error)
-	EditPerson(context.Context, *Person) (*Person, error)
 	mustEmbedUnimplementedAuthServer()
 }
 
@@ -185,9 +176,6 @@ func (UnimplementedAuthServer) CheckDevice(context.Context, *CheckDeviceRequest)
 }
 func (UnimplementedAuthServer) GetPerson(context.Context, *Person) (*Person, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPerson not implemented")
-}
-func (UnimplementedAuthServer) EditPerson(context.Context, *Person) (*Person, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method EditPerson not implemented")
 }
 func (UnimplementedAuthServer) mustEmbedUnimplementedAuthServer() {}
 
@@ -364,24 +352,6 @@ func _Auth_GetPerson_Handler(srv interface{}, ctx context.Context, dec func(inte
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Auth_EditPerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Person)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServer).EditPerson(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/voxov_auth.Auth/EditPerson",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServer).EditPerson(ctx, req.(*Person))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Auth_ServiceDesc is the grpc.ServiceDesc for Auth service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -424,10 +394,6 @@ var Auth_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPerson",
 			Handler:    _Auth_GetPerson_Handler,
-		},
-		{
-			MethodName: "EditPerson",
-			Handler:    _Auth_EditPerson_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

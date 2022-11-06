@@ -22,7 +22,7 @@ func (s *Server) ReadPerson(ctx context.Context, in *pb.Person) (*pb.Person, err
 		Health.NowDead()
 		return &pb.Person{}, nil
 	}
-	log.Println("GetPerson")
+	log.Println("ReadPerson")
 	return &pb.Person{
 		Pid:     r.GetPid(),
 		Hid:     r.GetHid(),

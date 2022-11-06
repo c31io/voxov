@@ -35,9 +35,8 @@ type VOxOVClient interface {
 	DeleteDevice(ctx context.Context, in *Device, opts ...grpc.CallOption) (*Device, error)
 	ListDevice(ctx context.Context, in *ListDeviceRequest, opts ...grpc.CallOption) (*ListDeviceReply, error)
 	AuthDevice(ctx context.Context, in *AuthDeviceRequest, opts ...grpc.CallOption) (*AuthDeviceReply, error)
-	// person ru
+	// person read
 	ReadPerson(ctx context.Context, in *Person, opts ...grpc.CallOption) (*Person, error)
-	UpdatePerson(ctx context.Context, in *Person, opts ...grpc.CallOption) (*Person, error)
 }
 
 type vOxOVClient struct {
@@ -147,15 +146,6 @@ func (c *vOxOVClient) ReadPerson(ctx context.Context, in *Person, opts ...grpc.C
 	return out, nil
 }
 
-func (c *vOxOVClient) UpdatePerson(ctx context.Context, in *Person, opts ...grpc.CallOption) (*Person, error) {
-	out := new(Person)
-	err := c.cc.Invoke(ctx, "/voxov.VOxOV/UpdatePerson", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // VOxOVServer is the server API for VOxOV service.
 // All implementations must embed UnimplementedVOxOVServer
 // for forward compatibility
@@ -173,9 +163,8 @@ type VOxOVServer interface {
 	DeleteDevice(context.Context, *Device) (*Device, error)
 	ListDevice(context.Context, *ListDeviceRequest) (*ListDeviceReply, error)
 	AuthDevice(context.Context, *AuthDeviceRequest) (*AuthDeviceReply, error)
-	// person ru
+	// person read
 	ReadPerson(context.Context, *Person) (*Person, error)
-	UpdatePerson(context.Context, *Person) (*Person, error)
 	mustEmbedUnimplementedVOxOVServer()
 }
 
@@ -215,9 +204,6 @@ func (UnimplementedVOxOVServer) AuthDevice(context.Context, *AuthDeviceRequest) 
 }
 func (UnimplementedVOxOVServer) ReadPerson(context.Context, *Person) (*Person, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ReadPerson not implemented")
-}
-func (UnimplementedVOxOVServer) UpdatePerson(context.Context, *Person) (*Person, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdatePerson not implemented")
 }
 func (UnimplementedVOxOVServer) mustEmbedUnimplementedVOxOVServer() {}
 
@@ -430,24 +416,6 @@ func _VOxOV_ReadPerson_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
-func _VOxOV_UpdatePerson_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Person)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(VOxOVServer).UpdatePerson(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/voxov.VOxOV/UpdatePerson",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(VOxOVServer).UpdatePerson(ctx, req.(*Person))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // VOxOV_ServiceDesc is the grpc.ServiceDesc for VOxOV service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -498,10 +466,6 @@ var VOxOV_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ReadPerson",
 			Handler:    _VOxOV_ReadPerson_Handler,
-		},
-		{
-			MethodName: "UpdatePerson",
-			Handler:    _VOxOV_UpdatePerson_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

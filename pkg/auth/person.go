@@ -11,15 +11,15 @@ import (
 
 func (s *Server) GetPerson(ctx context.Context, in *pb.Person) (*pb.Person, error) {
 	pid := in.GetPid()
-	row := pdb.QueryRowContext(ctx, `SELECT (pid, hid, balance, phone, pname, id_doc, dlimit, created, last_in) FROM people
+	row := pdb.QueryRowContext(ctx, `SELECT pid, COALESCE(hid, 0), balance, phone, COALESCE(pname, ''), COALESCE(id_doc, ''), dlimit, created, last_in FROM people
 	WHERE pid = $1`, pid)
 	var hid, balance int64
 	var phone, pname, id_doc string
 	var dlimit int32
 	var created, last_in time.Time
-	err := row.Scan(pid, hid, balance, phone, pname, id_doc, dlimit, created, last_in)
+	err := row.Scan(&pid, &hid, &balance, &phone, &pname, &id_doc, &dlimit, &created, &last_in)
 	if err != nil {
-		log.Println("error GetPerson")
+		log.Println("error GetPerson: " + err.Error())
 		return &pb.Person{}, nil
 	}
 	log.Println("GetPerson")
