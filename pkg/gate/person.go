@@ -35,25 +35,3 @@ func (s *Server) ReadPerson(ctx context.Context, in *pb.Person) (*pb.Person, err
 		LastIn:  r.GetLastIn(),
 	}, nil
 }
-
-func (s *Server) UpdatePerson(ctx context.Context, in *pb.Person) (*pb.Person, error) {
-	if getPid(ctx, in.GetToken()) != in.GetPid() {
-		log.Println("Token pid mismatch")
-		return &pb.Person{}, nil
-	}
-	c := pbAuth.NewAuthClient(authConn)
-	r, err := c.EditPerson(ctx, &pbAuth.Person{
-		Pid:   in.GetPid(),
-		Pname: in.GetPname(),
-	})
-	if err != nil {
-		log.Println("Failed to EditPerson")
-		Health.NowDead()
-		return &pb.Person{}, nil
-	}
-	log.Println("EditPerson")
-	return &pb.Person{
-		Pid:   r.GetPid(),
-		Pname: r.GetPname(),
-	}, nil
-}

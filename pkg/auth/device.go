@@ -47,8 +47,8 @@ func (s *Server) NewDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 		Dname:   dname,
 		Dinfo:   dinfo,
 		Pid:     pid,
-		Created: p.TimeToMs(created),
-		LastIn:  p.TimeToMs(last_in),
+		Created: p.TimeToUs(created),
+		LastIn:  p.TimeToUs(last_in),
 	}, nil
 }
 
@@ -70,8 +70,8 @@ func (s *Server) GetDevice(ctx context.Context, in *pb.Device) (*pb.Device, erro
 		Dname:   dname,
 		Dinfo:   in.Dinfo,
 		Pid:     pid,
-		Created: p.TimeToMs(created),
-		LastIn:  p.TimeToMs(last_in),
+		Created: p.TimeToUs(created),
+		LastIn:  p.TimeToUs(last_in),
 	}, nil
 }
 

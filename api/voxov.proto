@@ -18,9 +18,8 @@ service VOxOV {
     rpc DeleteDevice(Device) returns (Device);
     rpc ListDevice(ListDeviceRequest) returns (ListDeviceReply);
     rpc AuthDevice(AuthDeviceRequest) returns (AuthDeviceReply);
-    // person ru
+    // person read
     rpc ReadPerson(Person) returns (Person);
-    rpc UpdatePerson(Person) returns (Person);
 
     /* TODO
     // person

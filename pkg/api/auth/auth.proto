@@ -16,8 +16,8 @@ service Auth {
     rpc AllDevice (AllDeviceRequest) returns (AllDeviceReply); // ListDevice
     // device auth
     rpc CheckDevice (CheckDeviceRequest) returns (CheckDeviceReply); // AuthDevice
+    // person read
     rpc GetPerson (Person) returns (Person);
-    rpc EditPerson (Person) returns (Person);
     /* TODO
     rpc EditPhone // UpdatePhone
     rpc CheckPhone // WhichPhone
