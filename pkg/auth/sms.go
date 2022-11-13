@@ -66,6 +66,7 @@ func (s *Server) WaitMsg(ctx context.Context, in *pb.WaitMsgRequest) (*pb.WaitMs
 		log.Println("The key was not set")
 		return &pb.WaitMsgReply{}, nil
 	}
+	log.Println("WaitMsg")
 	return &pb.WaitMsgReply{Tel: tel, Msg: msg}, nil
 }
 

@@ -15,6 +15,7 @@ type Health struct {
 }
 
 func (h *Health) NowDead() {
+	log.Println("NowDead")
 	h.Alive = false
 	h.Dead <- struct{}{}
 }

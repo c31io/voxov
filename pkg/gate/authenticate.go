@@ -42,6 +42,7 @@ func (s *Server) Authenticate(ctx context.Context, in *pb.AuthenticateRequest) (
 		Health.NowDead()
 		return &pb.AuthenticateReply{}, nil
 	}
+	log.Println("Authenticate")
 	return &pb.AuthenticateReply{Tel: r.GetTel(), Msg: r.GetMsg()}, nil
 }
 
