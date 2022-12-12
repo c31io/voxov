@@ -1,6 +1,8 @@
 # VOxOV
 
-Middle End 
+This implementation is discontinued.
+
+New: https://github.com/vorgv/voxov
 
 ## Usage-based
 
